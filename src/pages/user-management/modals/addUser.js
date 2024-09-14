@@ -30,7 +30,18 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
       >
         <Divider style={{ marginTop: "2px", marginBottom: "35px" }} />
         <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
-          <Col span={24}>
+          <Col span={12}>
+            <span style={{ fontSize: "14px" }}>User ID</span>
+            <Input
+              name="userID"
+              className="h-[38px] w-[100%] mb-3"
+              variant="outlined"
+              placeholder="ID"
+            />
+          </Col>
+        </Row>
+        <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
+          <Col span={12}>
             <span style={{ fontSize: "14px" }}>First Name</span>
             <Input
               name="name"
@@ -39,8 +50,6 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
               placeholder="Enter Name"
             />
           </Col>
-        </Row>
-        <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
           <Col span={12}>
             <span style={{ fontSize: "14px" }}>Last Name</span>
             <Input
@@ -50,6 +59,8 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
               placeholder="Enter Last Name"
             />
           </Col>
+        </Row>
+        <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
           <Col span={12}>
             <span style={{ fontSize: "14px" }}>Other Name</span>
             <Input
@@ -57,17 +68,6 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
               className="h-[38px] w-[100%] mb-3"
               variant="outlined"
               placeholder="Enter Other Name"
-            />
-          </Col>
-        </Row>
-        <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
-          <Col span={12}>
-            <span style={{ fontSize: "14px" }}>Phone</span>
-            <Input
-              name="phone number"
-              className="h-[38px] w-[100%] mb-3"
-              variant="outlined"
-              placeholder="Enter Number"
             />
           </Col>
           <Col span={12}>
@@ -80,23 +80,28 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
             />
           </Col>
         </Row>
-        <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
-          <Col span={24}>
+        <Row gutter={{ xs: 8, sm: 16, md: 18 }} className="mb-3">
+          <Col span={12}>
             <span style={{ fontSize: "14px" }}>Department</span>
-            <Input
-              name="department"
+            <Select
               className="h-[38px] w-[100%] mb-3"
-              variant="outlined"
+              options={[
+                { value: "hrdept", label: "Human Resource" },
+                { value: "financedept", label: "Finance Department" },
+                { value: "procurementdept", label: "Procurement" },
+              ]}
             />
           </Col>
-        </Row>
-        <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
-          <Col span={24}>
+          <Col span={12}>
             <span style={{ fontSize: "14px" }}>Role</span>
-            <Input
-              name="role"
+            <Select
               className="h-[38px] w-[100%] mb-3"
-              variant="outlined"
+              defaultValue="user"
+              options={[
+                { value: "user", label: "User" },
+                { value: "admin", label: "Admin" },
+                { value: "superadmin", label: "Super Administrator" },
+              ]}
             />
           </Col>
         </Row>

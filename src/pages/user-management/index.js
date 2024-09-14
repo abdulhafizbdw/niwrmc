@@ -1,26 +1,6 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Input,
-  Flex,
-  Select,
-  Dropdown,
-  Space,
-  Table,
-  Tag,
-  theme,
-} from "antd";
-import {
-  CheckSquareOutlined,
-  FormOutlined,
-  CloseSquareOutlined,
-  DownOutlined,
-  UserOutlined,
-  AppstoreOutlined,
-  PlusOutlined,
-  EyeOutlined,
-  MoreOutlined,
-} from "@ant-design/icons";
+import { Button, Input, Flex, Dropdown, Space, Table, Tag, theme } from "antd";
+import { UserOutlined, MoreOutlined } from "@ant-design/icons";
 import AddUserModal from "./modals/addUser";
 
 import { useNavigate } from "react-router-dom";
@@ -28,38 +8,42 @@ import { useNavigate } from "react-router-dom";
 const items = [
   {
     key: "1",
-    label: "Action 1",
+    label: "Edit",
   },
   {
     key: "2",
-    label: "Action 2",
+    label: "Reset Password",
+  },
+  {
+    key: "3",
+    label: "Delete",
   },
 ];
 
 const columns = [
   {
-    title: "NAME",
+    title: "Name",
     dataIndex: "name",
     key: "name",
     render: (text) => <a>{text}</a>,
   },
   {
-    title: "USER ID",
-    dataIndex: "userID",
-    key: "userID",
+    title: "User Email",
+    dataIndex: "email",
+    key: "email",
   },
   {
-    title: "ROLE",
+    title: "Role",
     dataIndex: "role",
     key: "role",
   },
   {
-    title: "DEPARTMENT",
+    title: "Department",
     dataIndex: "department",
     key: "department",
   },
   {
-    title: "STATUS",
+    title: "Status",
     key: "status",
     dataIndex: "status",
     render: (status) => (
@@ -71,7 +55,7 @@ const columns = [
     ),
   },
   {
-    title: "ACTION",
+    title: "Action",
     key: "action",
     dataIndex: "action",
     render: () => (
@@ -91,7 +75,7 @@ const data = [
   {
     key: "1",
     name: "Aliyu Bello",
-    userID: "aliyu456",
+    email: "aliyu456@gmail.com",
     role: "Super Administrator",
     department: "IT Department",
     status: "active",
@@ -99,32 +83,32 @@ const data = [
   {
     key: "2",
     name: "Sani Bukar",
-    userID: "sani123",
-    role: "Security Administrator",
+    email: "sani123@gmail.com",
+    role: "Admin",
     department: "IT Department",
     status: "active",
   },
   {
     key: "3",
     name: "Victor Johnson",
-    userID: "vic",
-    role: "Project Manager",
+    email: "vic@gmail.com",
+    role: "User",
     department: "Procurement Department",
     status: "inactive",
   },
   {
     key: "4",
     name: "Susan James",
-    userID: "susan456",
-    role: "Officer",
+    email: "susan456@yahoo.com",
+    role: "User",
     department: "Finance Department",
     status: "active",
   },
   {
     key: "5",
     name: "Hauwa Yusuf",
-    userID: "yusufhauwa",
-    role: "Supervisor",
+    email: "yusufhauwa@gmail.com",
+    role: "User",
     department: "IT Department",
     status: "active",
   },
@@ -152,19 +136,6 @@ export default function UserManagement() {
     setOpen(false);
   };
 
-  const items = [
-    {
-      label: "1st menu item",
-      key: "1",
-      icon: <UserOutlined />,
-    },
-    {
-      label: "2nd menu item",
-      key: "2",
-      icon: <UserOutlined />,
-    },
-  ];
-
   return (
     <div className="">
       <div
@@ -189,7 +160,7 @@ export default function UserManagement() {
           </Flex>
 
           <div>
-            <Table columns={columns} dataSource={data} />
+            <Table columns={columns} dataSource={data} bordered={true} />
           </div>
         </Flex>
       </div>

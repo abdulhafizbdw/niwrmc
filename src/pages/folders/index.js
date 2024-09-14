@@ -1,36 +1,17 @@
 import React, { useState } from "react";
+import { Button, Input, Flex, Dropdown, Space, Table, Tabs, theme } from "antd";
 import {
-  Button,
-  Input,
-  Flex,
-  Select,
-  Dropdown,
-  Space,
-  Table,
-  Tag,
-  Tabs,
-  Drawer,
-  theme,
-  Typography,
-  Divider,
-} from "antd";
-import {
-  CheckSquareOutlined,
-  FormOutlined,
-  CloseSquareOutlined,
-  DownOutlined,
-  UserOutlined,
-  AppstoreOutlined,
-  PlusOutlined,
-  EyeOutlined,
   MoreOutlined,
-  EditOutlined,
-  MergeOutlined,
   FolderOpenOutlined,
+  FolderOutlined,
   SwapOutlined,
   HourglassOutlined,
 } from "@ant-design/icons";
+import TileCard from "../../components/Cards/TileCard";
 import TransferModal from "./modals/transferModal";
+import Icon1 from "../../assets/foldericon.svg";
+import Icon2 from "../../assets/transfericon.svg";
+import Icon3 from "../../assets/awaitingicon.svg";
 
 import { useNavigate } from "react-router-dom";
 
@@ -56,8 +37,6 @@ export default function Folders() {
   const handleCancel = () => {
     console.log("Clicked cancel button");
     setOpen(false);
-    setMapPrivilege(false);
-    setEditPermission(false);
   };
 
   const onChange = (key) => {
@@ -76,6 +55,7 @@ export default function Folders() {
     {
       key: "3",
       label: "Transfer",
+      onClick: () => setOpen(true),
     },
   ];
 
@@ -242,7 +222,6 @@ export default function Folders() {
             <Button
               type="primary"
               className="text-[12px]"
-              // onClick={() => setOpen(true)}
               onClick={() => navigate("/new-folder")}
             >
               <Space>Create Folder</Space>
@@ -307,15 +286,41 @@ export default function Folders() {
   ];
 
   return (
-    <div className="">
-      <Tabs onChange={onChange} type="card" items={tabItems} />
+    <>
+      <ul
+        role="list"
+        className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 p-0"
+        style={{ width: "70%" }}
+      >
+        <TileCard
+          title="Total Folders"
+          icon={Icon1}
+          iconBG="[#55A51C]"
+          number="320"
+        />
+        <TileCard
+          title="Transferred"
+          icon={Icon2}
+          iconBG="[#70A1E5]"
+          number="57"
+        />
+        <TileCard
+          title="Awaiting Review"
+          icon={Icon3}
+          iconBG="[#F0C274]"
+          number="06"
+        />
+      </ul>
+      <div className="mt-5">
+        <Tabs onChange={onChange} type="card" items={tabItems} />
 
-      <TransferModal
-        open={open}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-      />
-    </div>
+        <TransferModal
+          open={open}
+          onOk={handleOk}
+          confirmLoading={confirmLoading}
+          onCancel={handleCancel}
+        />
+      </div>
+    </>
   );
 }
