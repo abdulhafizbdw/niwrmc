@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, Input, Flex, Form } from "antd";
 import {
-  RightOutlined,
   EyeTwoTone,
   EyeInvisibleOutlined,
   UserOutlined,
@@ -16,7 +15,7 @@ export default function Login() {
   return (
     <div className="bg-[#F5F5F7] flex justify-center items-center w-full h-[100vh]">
       <Flex justify="space-between" className="w-[100%]">
-        <div className="w-[30%] bg-[#FFFFFF] mx-auto my-auto p-16 text-left">
+        <div className="w-[90%] md:w-[30%] bg-[#FFFFFF] mx-auto my-auto p-16 text-left">
           <span>
             {" "}
             <img width={353} height={64} src={logo} alt="logo" />
@@ -58,15 +57,10 @@ export default function Login() {
             <Button
               className="h-[38px] w-[100%] mb-3 bg-PrimaryColor"
               type="primary"
-              onClick={() => navigate("/users")}
+              onClick={() => navigate("/folders")}
             >
               Login
             </Button>
-            <div className="w-[100%]">
-              <p className="text-[14px] text-[#B1B1B1] text-right">
-                Forgot Password? <RightOutlined />
-              </p>
-            </div>
           </form>
         </div>
       </Flex>

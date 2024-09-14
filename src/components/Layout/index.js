@@ -63,6 +63,7 @@ const DashboardLayout = () => {
       <Layout
         style={{
           minHeight: "100vh",
+          width: "auto",
         }}
       >
         <Header
