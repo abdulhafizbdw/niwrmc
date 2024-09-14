@@ -8,9 +8,11 @@ import {
   Select,
   Typography,
   Divider,
+  Form,
+  Upload,
   theme,
 } from "antd";
-import { UserOutlined, PlusOutlined } from "@ant-design/icons";
+import { UserOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 
 import { useNavigate } from "react-router-dom";
 
@@ -21,6 +23,14 @@ export default function NewFolder() {
   } = theme.useToken();
 
   const { Search, TextArea } = Input;
+
+  const normFile = (e) => {
+    console.log("Upload event:", e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
+  };
 
   const items = [
     {
@@ -99,13 +109,17 @@ export default function NewFolder() {
                   placeholder="Enter title"
                 />
               </Col>
-              <Col span={12}>
-                {" "}
-                <span style={{ fontSize: "14px" }}>Type</span>
-                <Select
-                  className="h-[38px] w-[100%] mb-3"
-                  options={[{ value: "type", label: "Type" }]}
-                />
+              <Col span={6} offset={3}>
+                <Form.Item
+                  name="upload"
+                  valuePropName="fileList"
+                  getValueFromEvent={normFile}
+                  extra="upload your document here"
+                >
+                  <Upload name="logo" action="/upload.do" listType="picture">
+                    <Button icon={<UploadOutlined />}>Click to upload</Button>
+                  </Upload>
+                </Form.Item>
               </Col>
             </Row>
 

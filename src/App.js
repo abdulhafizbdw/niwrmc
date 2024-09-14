@@ -30,7 +30,7 @@ function App() {
           <Routes>
             <Route path="/Login" element={<Login />} />
             <Route path="/" element={<PrivateRoute />}>
-              <Route path="/" element={<Navigate to="/users" replace />} />
+              <Route path="/" element={<Navigate to="/login" replace />} />
               <Route exact path="folders" element={<Folders />} />
               <Route exact path="new-folder" element={<NewFolder />} />
               <Route exact path="users" element={<UserManagement />} />

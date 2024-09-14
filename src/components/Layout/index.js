@@ -53,7 +53,7 @@ const DashboardLayout = () => {
               label: "Users",
             },
             {
-              key: "signout",
+              key: "login",
               icon: <LogoutOutlined />,
               label: "Logout",
             },
