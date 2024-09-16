@@ -7,8 +7,8 @@ import {
   FolderOpenOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, theme, Typography } from "antd";
-import logo from "../../assets/logo-niwrmc.svg";
+import { Button, Flex, Layout, Menu, theme, Typography } from "antd";
+import logo from "../../assets/niwrmclogo.jpg";
 
 const { Header, Sider, Content } = Layout;
 const DashboardLayout = () => {
@@ -31,7 +31,12 @@ const DashboardLayout = () => {
         <div className="logo-vertical my-5 ml-4">
           <span>
             {" "}
-            <img width={250} height={46} src={logo} />
+            <Flex align="center">
+              <img width={50} src={logo} alt="logo" />
+              <span className="text-sm leading-none ml-1">
+                Nigeria Integrated Water Resource Management Commission
+              </span>
+            </Flex>
           </span>
         </div>
         <Menu
@@ -43,9 +48,9 @@ const DashboardLayout = () => {
           }}
           items={[
             {
-              key: "/folders",
+              key: "/files",
               icon: <FolderOpenOutlined />,
-              label: "Folders",
+              label: "Files",
             },
             {
               key: "/users",
@@ -72,7 +77,7 @@ const DashboardLayout = () => {
             background: colorBgContainer,
           }}
         >
-          <Button
+          {/* <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
@@ -81,7 +86,10 @@ const DashboardLayout = () => {
               width: 64,
               height: 64,
             }}
-          />
+          /> */}
+          <span className="text-xl font-bold text-black ml-10">
+            NIWRMC File Registry
+          </span>
         </Header>
         <Content
           style={{

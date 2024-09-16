@@ -16,7 +16,7 @@ import { UserOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 
 import { useNavigate } from "react-router-dom";
 
-export default function NewFolder() {
+export default function NewFile() {
   const navigate = useNavigate();
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -60,7 +60,7 @@ export default function NewFolder() {
         <Flex vertical gap="large">
           <div className="border-bottom">
             <Flex justify="space-between" align="center">
-              <Typography.Title level={4}>New Folder</Typography.Title>
+              <Typography.Title level={4}>New File</Typography.Title>
             </Flex>
           </div>
           <div>
@@ -146,9 +146,9 @@ export default function NewFolder() {
                 type="link"
                 block
                 className="text-PrimaryColor"
-                onClick={() => navigate("/folders")}
+                onClick={() => navigate("/files")}
               >
-                Back to Folders
+                Back to Files
               </Button>
             </div>
             <div>
@@ -158,7 +158,7 @@ export default function NewFolder() {
                 block
                 className="bg-PrimaryColor"
               >
-                Create Folder
+                Create File
               </Button>
             </div>
           </Flex>

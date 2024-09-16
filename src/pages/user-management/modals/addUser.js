@@ -80,15 +80,49 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
             />
           </Col>
         </Row>
-        <Row gutter={{ xs: 8, sm: 16, md: 18 }} className="mb-3">
-          <Col span={12}>
+        <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
+          <Col span={24}>
             <span style={{ fontSize: "14px" }}>Department</span>
             <Select
               className="h-[38px] w-[100%] mb-3"
               options={[
-                { value: "hrdept", label: "Human Resource" },
-                { value: "financedept", label: "Finance Department" },
-                { value: "procurementdept", label: "Procurement" },
+                { value: "exoff", label: "Executive Director Office" },
+                {
+                  value: "medept",
+                  label: "Monitoring & Enforcement Department",
+                },
+                { value: "hrdept", label: "Human Resources Department" },
+                {
+                  value: "aadept",
+                  label: "Authorization & Allocation Department",
+                },
+                {
+                  value: "cssdept",
+                  label: "Corporate Support Services Department",
+                },
+                {
+                  value: "cmwdept",
+                  label: "Catchment Management & Water Utilization Department",
+                },
+                { value: "financedept", label: "Finance & Account Department" },
+              ]}
+            />
+          </Col>
+        </Row>
+        <Row gutter={{ xs: 8, sm: 16, md: 18 }} className="mb-3">
+          <Col span={12}>
+            <span style={{ fontSize: "14px" }}>Unit</span>
+            <Select
+              className="h-[38px] w-[100%] mb-3"
+              defaultValue=""
+              options={[
+                { value: "legalunit", label: "Legal Unit" },
+                { value: "hydrounit", label: "Hydroinformatics Unit" },
+                { value: "auditunit", label: "Audit Unit" },
+                { value: "bbudgetunit", label: "Budget Unit" },
+                { value: "ppunit", label: "Press & Protocol Unit" },
+                { value: "procurementunit", label: "Procurement Unit" },
+                { value: "checkingunit", label: "Checking Unit" },
               ]}
             />
           </Col>
