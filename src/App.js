@@ -5,8 +5,8 @@ import { Navigate } from "react-router-dom";
 
 import PrivateRoute from "./routers/PrivateRoute.js";
 import Login from "./pages/login";
-import Folders from "./pages/folders/index.js";
-import NewFolder from "./pages/folders/newFolder.js";
+import Files from "./pages/files/index.js";
+import NewFile from "./pages/files/newFile.js";
 import UserManagement from "./pages/user-management/index.js";
 
 function App() {
@@ -31,8 +31,8 @@ function App() {
             <Route path="/Login" element={<Login />} />
             <Route path="/" element={<PrivateRoute />}>
               <Route path="/" element={<Navigate to="/login" replace />} />
-              <Route exact path="folders" element={<Folders />} />
-              <Route exact path="new-folder" element={<NewFolder />} />
+              <Route exact path="files" element={<Files />} />
+              <Route exact path="new-file" element={<NewFile />} />
               <Route exact path="users" element={<UserManagement />} />
             </Route>
           </Routes>

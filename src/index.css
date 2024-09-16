@@ -19,3 +19,9 @@ code {
 .ant-tabs-top .ant-tabs-nav {
   margin: 0 0 0px 50px;
  }
+
+ .ant-layout .ant-layout-sider {
+  min-width: 235px !important;
+  max-width: 235px !important;
+  width: 235px !important;
+ }

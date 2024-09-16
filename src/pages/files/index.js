@@ -15,7 +15,7 @@ import Icon3 from "../../assets/awaitingicon.svg";
 
 import { useNavigate } from "react-router-dom";
 
-export default function Folders() {
+export default function Files() {
   const navigate = useNavigate();
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -61,9 +61,9 @@ export default function Folders() {
 
   const columns = [
     {
-      title: "Folder Title",
-      dataIndex: "folder",
-      key: "folder",
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
     },
     {
       title: "Type",
@@ -105,56 +105,56 @@ export default function Folders() {
   const data = [
     {
       key: "1",
-      folder: "Department Folder 501",
+      title: "Department Folder 501",
       type: "Documentation",
       items: "19",
-      date: "10/08/2024",
-      department: "IT Department",
-      transferdept: "Finance Department",
+      date: "10/09/2024",
+      department: "Authorization & Allocation Dept",
+      transferdept: "Human Resource Dept",
     },
     {
       key: "2",
-      folder: "Department Folder 501",
+      title: "Training Requirements",
       type: "Documentation",
-      items: "19",
-      date: "10/08/2024",
-      department: "IT Department",
-      transferdept: "Procurement Department",
+      items: "7",
+      date: "29/08/2024",
+      department: "Corporate Support Services Dept",
+      transferdept: "Finance & Account Dept",
     },
     {
       key: "3",
-      folder: "Department Folder 501",
+      title: "2023 Fisacal Year Breakdown",
       type: "Documentation",
-      items: "19",
-      date: "10/08/2024",
-      department: "IT Department",
-      transferdept: "Accounts Department",
+      items: "20",
+      date: "13/08/2024",
+      department: "Human Resource Dept",
+      transferdept: "Corporate Support Services Dept",
     },
     {
       key: "4",
-      folder: "Department Folder 501",
+      title: "Procurement of Generator",
       type: "Documentation",
-      items: "19",
-      date: "10/08/2024",
-      department: "IT Department",
-      transferdept: "Training Department",
+      items: "3",
+      date: "06/08/2024",
+      department: "Catchment Management & Water Utilization Dept",
+      transferdept: "Authorization & Allocation Dept",
     },
     {
       key: "5",
-      folder: "Department Folder 501",
+      title: "Onboarding Documents",
       type: "Documentation",
-      items: "19",
-      date: "10/08/2024",
-      department: "IT Department",
-      transferdept: "Human Department",
+      items: "9",
+      date: "10/07/2024",
+      department: "Monitoring & Enforcement Dept",
+      transferdept: "Executive Director Office",
     },
   ];
 
   const transfercolumns = [
     {
-      title: "Folder Title",
-      dataIndex: "folder",
-      key: "folder",
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
     },
     {
       title: "Type",
@@ -199,7 +199,7 @@ export default function Folders() {
     },
   ];
 
-  const folders = (
+  const files = (
     <div
       style={{
         padding: 24,
@@ -222,9 +222,9 @@ export default function Folders() {
             <Button
               type="primary"
               className="text-[12px]"
-              onClick={() => navigate("/new-folder")}
+              onClick={() => navigate("/new-file")}
             >
-              <Space>Create Folder</Space>
+              <Space>Create File</Space>
             </Button>
           </div>
         </Flex>
@@ -267,9 +267,9 @@ export default function Folders() {
   const tabItems = [
     {
       key: "1",
-      label: "Folders",
+      label: "Files",
       icon: <FolderOpenOutlined />,
-      children: folders,
+      children: files,
     },
     {
       key: "2",
@@ -279,9 +279,9 @@ export default function Folders() {
     },
     {
       key: "3",
-      label: "Awaiting Review",
+      label: "Pending Review",
       icon: <HourglassOutlined />,
-      children: folders,
+      children: files,
     },
   ];
 
@@ -293,7 +293,7 @@ export default function Folders() {
         style={{ width: "70%" }}
       >
         <TileCard
-          title="Total Folders"
+          title="Total Files"
           icon={Icon1}
           iconBG="[#55A51C]"
           number="320"
@@ -305,7 +305,7 @@ export default function Folders() {
           number="57"
         />
         <TileCard
-          title="Awaiting Review"
+          title="Pending Review"
           icon={Icon3}
           iconBG="[#F0C274]"
           number="06"

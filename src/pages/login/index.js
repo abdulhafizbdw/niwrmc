@@ -20,9 +20,8 @@ export default function Login() {
             {" "}
             <img width={353} height={64} src={logo} alt="logo" />
           </span>
-          <h1 className="font-bold text-[30px] mt-4 text-PrimaryColor">
-            Log in
-          </h1>
+          <h1 className="text-2xl font-bold mt-4">NIWRMC File Registry</h1>
+          <h1 className="font-bold text-[30px] text-PrimaryColor">Log in</h1>
           <p className="text-[18px] mb-5">Welcome back</p>
           <form>
             <div className="w-[100%]">
@@ -57,7 +56,7 @@ export default function Login() {
             <Button
               className="h-[38px] w-[100%] mb-3 bg-PrimaryColor"
               type="primary"
-              onClick={() => navigate("/folders")}
+              onClick={() => navigate("/files")}
             >
               Login
             </Button>

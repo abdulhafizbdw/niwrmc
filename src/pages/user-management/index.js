@@ -77,7 +77,7 @@ const data = [
     name: "Aliyu Bello",
     email: "aliyu456@gmail.com",
     role: "Super Administrator",
-    department: "IT Department",
+    department: "Executive Director Office",
     status: "active",
   },
   {
@@ -85,7 +85,7 @@ const data = [
     name: "Sani Bukar",
     email: "sani123@gmail.com",
     role: "Admin",
-    department: "IT Department",
+    department: "Human Resource Department",
     status: "active",
   },
   {
@@ -93,7 +93,7 @@ const data = [
     name: "Victor Johnson",
     email: "vic@gmail.com",
     role: "User",
-    department: "Procurement Department",
+    department: "Authorization & Allocation Department",
     status: "inactive",
   },
   {
@@ -101,7 +101,7 @@ const data = [
     name: "Susan James",
     email: "susan456@yahoo.com",
     role: "User",
-    department: "Finance Department",
+    department: "Corporate Services Department",
     status: "active",
   },
   {
@@ -109,7 +109,7 @@ const data = [
     name: "Hauwa Yusuf",
     email: "yusufhauwa@gmail.com",
     role: "User",
-    department: "IT Department",
+    department: "Human Resource Department",
     status: "active",
   },
 ];

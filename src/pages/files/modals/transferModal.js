@@ -31,9 +31,25 @@ const TransferModal = ({ open, onOk, confirmLoading, onCancel }) => {
             <Select
               className="h-[38px] w-[100%] mb-3"
               options={[
-                { value: "hrdept", label: "Human Resource" },
-                { value: "financedept", label: "Finance Department" },
-                { value: "procurementdept", label: "Procurement" },
+                { value: "exoff", label: "Executive Director Office" },
+                {
+                  value: "medept",
+                  label: "Monitoring & Enforcement Department",
+                },
+                { value: "hrdept", label: "Human Resources Department" },
+                {
+                  value: "aadept",
+                  label: "Authorization & Allocation Department",
+                },
+                {
+                  value: "cssdept",
+                  label: "Corporate Support Services Department",
+                },
+                {
+                  value: "cmwdept",
+                  label: "Catchment Management & Water Utilization Department",
+                },
+                { value: "financedept", label: "Finance & Account Department" },
               ]}
             />
           </Col>
