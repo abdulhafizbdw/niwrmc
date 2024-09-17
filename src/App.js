@@ -4,7 +4,7 @@ import { ConfigProvider } from "antd";
 import { Navigate } from "react-router-dom";
 
 import PrivateRoute from "./routers/PrivateRoute.js";
-import Login from "./pages/login";
+import Login from "./pages/login/index.js";
 import Files from "./pages/files/index.js";
 import NewFile from "./pages/files/newFile.js";
 import UserManagement from "./pages/user-management/index.js";
@@ -28,7 +28,7 @@ function App() {
       <Suspense fallback="loading">
         <Router>
           <Routes>
-            <Route path="/Login" element={<Login />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/" element={<PrivateRoute />}>
               <Route path="/" element={<Navigate to="/login" replace />} />
               <Route exact path="files" element={<Files />} />
