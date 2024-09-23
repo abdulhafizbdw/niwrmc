@@ -13,10 +13,11 @@ import {
   theme,
 } from "antd";
 import { UserOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import deleteIcon from "../../assets/delete.svg";
 
 import { useNavigate } from "react-router-dom";
 
-export default function NewFile() {
+export default function NewProject() {
   const navigate = useNavigate();
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -60,18 +61,29 @@ export default function NewFile() {
         <Flex vertical gap="large">
           <div className="border-bottom">
             <Flex justify="space-between" align="center">
-              <Typography.Title level={4}>New File</Typography.Title>
+              <Typography.Title level={4}>New Project</Typography.Title>
             </Flex>
           </div>
           <div>
             <Row align="middle" gutter={{ xs: 8, sm: 16, md: 34 }}>
-              <Col span={12}>
+              <Col span={24}>
                 <span style={{ fontSize: "14px" }}>Title</span>
                 <Input
                   name="title"
                   className="h-[38px] w-[100%] mb-3"
                   variant="outlined"
                   placeholder="Enter title"
+                />
+              </Col>
+            </Row>
+            <Row align="middle" gutter={{ xs: 8, sm: 16, md: 34 }}>
+              <Col span={12}>
+                <span style={{ fontSize: "14px" }}>Company</span>
+                <Input
+                  name="company"
+                  className="h-[38px] w-[100%] mb-3"
+                  variant="outlined"
+                  placeholder="Enter company"
                 />
               </Col>
               <Col span={12}>
@@ -117,6 +129,49 @@ export default function NewFile() {
                   variant="outlined"
                   placeholder="Add comment.."
                 />
+              </Col>
+            </Row>
+
+            <Divider style={{ marginTop: "20px", marginBottom: "35px" }} />
+
+            <Typography.Title level={5}>Milestones</Typography.Title>
+            <Row align="middle" gutter={{ xs: 8, sm: 16, md: 34 }}>
+              <Col span={12}>
+                <Input
+                  name="title"
+                  className="h-[38px] w-[100%] mb-3"
+                  variant="outlined"
+                  placeholder="Enter a milestone"
+                />
+              </Col>
+              <Col>
+                <img src={deleteIcon} alt="delete" className="mb-3 -ml-2" />
+              </Col>
+            </Row>
+            <Row align="middle" gutter={{ xs: 8, sm: 16, md: 34 }}>
+              <Col span={12}>
+                <Input
+                  name="title"
+                  className="h-[38px] w-[100%] mb-3"
+                  variant="outlined"
+                  placeholder="Enter a milestone"
+                />
+              </Col>
+              <Col>
+                <img src={deleteIcon} alt="delete" className="mb-3 -ml-2" />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12} align="left">
+                <Button
+                  type="primary"
+                  ghost
+                  icon={<PlusOutlined />}
+                  size="middle"
+                  className="bg-PrimaryColor"
+                >
+                  Add Milestone
+                </Button>
               </Col>
             </Row>
 
@@ -172,7 +227,7 @@ export default function NewFile() {
                 className="text-PrimaryColor"
                 onClick={() => navigate("/files")}
               >
-                Back to Files
+                Back to Projects
               </Button>
             </div>
             <div>
@@ -182,7 +237,7 @@ export default function NewFile() {
                 block
                 className="bg-PrimaryColor"
               >
-                Create File
+                Create Project
               </Button>
             </div>
           </Flex>
