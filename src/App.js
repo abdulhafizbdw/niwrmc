@@ -7,6 +7,8 @@ import PrivateRoute from "./routers/PrivateRoute.js";
 import Login from "./pages/login/index.js";
 import Files from "./pages/files/index.js";
 import NewFile from "./pages/files/newFile.js";
+import Projects from "./pages/projects/index.js";
+import NewProject from "./pages/projects/newProject.js";
 import UserManagement from "./pages/user-management/index.js";
 
 function App() {
@@ -33,6 +35,8 @@ function App() {
               <Route path="/" element={<Navigate to="/login" replace />} />
               <Route exact path="files" element={<Files />} />
               <Route exact path="new-file" element={<NewFile />} />
+              <Route exact path="projects" element={<Projects />} />
+              <Route exact path="new-project" element={<NewProject />} />
               <Route exact path="users" element={<UserManagement />} />
             </Route>
           </Routes>

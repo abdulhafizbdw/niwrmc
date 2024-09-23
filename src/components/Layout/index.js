@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   UserOutlined,
   FolderOpenOutlined,
   LogoutOutlined,
+  ProjectOutlined,
 } from "@ant-design/icons";
-import { Button, Flex, Layout, Menu, theme, Typography } from "antd";
+import { Flex, Layout, Menu, theme } from "antd";
 import logo from "../../assets/niwrmclogo.jpg";
 
 const { Header, Sider, Content } = Layout;
@@ -51,6 +50,11 @@ const DashboardLayout = () => {
               key: "/files",
               icon: <FolderOpenOutlined />,
               label: "Files",
+            },
+            {
+              key: "/projects",
+              icon: <ProjectOutlined />,
+              label: "Projects",
             },
             {
               key: "/users",
