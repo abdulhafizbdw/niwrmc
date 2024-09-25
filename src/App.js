@@ -9,6 +9,7 @@ import Files from "./pages/files/index.js";
 import NewFile from "./pages/files/newFile.js";
 import Projects from "./pages/projects/index.js";
 import NewProject from "./pages/projects/newProject.js";
+import ViewProject from "./pages/projects/viewProject.js";
 import UserManagement from "./pages/user-management/index.js";
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
               <Route exact path="new-file" element={<NewFile />} />
               <Route exact path="projects" element={<Projects />} />
               <Route exact path="new-project" element={<NewProject />} />
+              <Route exact path="view-project" element={<ViewProject />} />
               <Route exact path="users" element={<UserManagement />} />
             </Route>
           </Routes>
