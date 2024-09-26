@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
+import React, { useEffect, useState } from "react";
+import * as Yup from "yup";
+import { useFormik } from "formik";
 import {
   Button,
   Modal,
@@ -11,41 +11,41 @@ import {
   Divider,
   Switch,
   notification,
-} from 'antd';
+} from "antd";
 import {
   CheckCircleOutlined,
   CheckOutlined,
   CloseOutlined,
-} from '@ant-design/icons';
-import { useGetDepartmentsQuery } from '../../../redux/api/services/DepartmentService';
-import { useCreateAccountMutation } from '../../../redux/api/services/AuthService';
+} from "@ant-design/icons";
+import { useGetDepartmentsQuery } from "../../../redux/api/services/DepartmentService";
+import { useCreateAccountMutation } from "../../../redux/api/services/AuthService";
 const validationSchema = Yup.object({
-  firstName: Yup.string().required('First Name is required'),
-  lastName: Yup.string().required('Last Name is required'),
+  firstName: Yup.string().required("First Name is required"),
+  lastName: Yup.string().required("Last Name is required"),
   otherName: Yup.string().optional(), // Optional field
-  user_id: Yup.string().required('User ID is required'),
+  user_id: Yup.string().required("User ID is required"),
   email: Yup.string()
-    .email('Invalid email format')
-    .required('Email is required'),
+    .email("Invalid email format")
+    .required("Email is required"),
   password: Yup.string()
-    .min(6, 'Password must be at least 6 characters')
-    .required('Password is required'),
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
   department: Yup.array()
     .of(Yup.string())
-    .min(1, 'At least one role is required'),
-  role: Yup.array().of(Yup.string()).min(1, 'At least one role is required'),
+    .min(1, "At least one role is required"),
+  role: Yup.array().of(Yup.string()).min(1, "At least one role is required"),
 });
 
 const initialValues = {
-  firstName: '',
-  lastName: '',
-  otherName: '',
-  user_id: '',
-  email: '',
-  password: '12345678',
+  firstName: "",
+  lastName: "",
+  otherName: "",
+  user_id: "",
+  email: "",
+  password: "12345678",
   isActive: true, // Boolean field, set to false initially
   department: [],
-  role: ['user'], // Default role as 'user'
+  role: ["user"], // Default role as 'user'
 };
 const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
   const [departmentList, setDepartments] = useState([]);
@@ -62,18 +62,18 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
         if (loggedIn.error) {
           notification.error({ message: loggedIn.error.data.message });
         } else {
-          notification.success({ message: 'Created Successfully' });
+          notification.success({ message: "Created Successfully" });
           // navigate('/files');
         }
       } catch (error) {
-        notification.error('Something went wrong');
+        notification.error("Something went wrong");
       }
     },
   });
 
   const {
     email,
-
+    password,
     firstName,
     lastName,
     otherName,
@@ -113,16 +113,18 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
                 handleSubmit();
               }}
               type="primary"
-              className="bg-PrimaryColor">
+              className="bg-PrimaryColor"
+            >
               <CheckCircleOutlined />
               Submit
             </Button>
           </>
-        )}>
-        <Divider style={{ marginTop: '2px', marginBottom: '35px' }} />
+        )}
+      >
+        <Divider style={{ marginTop: "2px", marginBottom: "35px" }} />
         <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
           <Col span={12}>
-            <span style={{ fontSize: '14px' }}>User ID</span>
+            <span style={{ fontSize: "14px" }}>User ID</span>
             <Input
               value={user_id}
               onChange={handleChange}
@@ -135,7 +137,7 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
         </Row>
         <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
           <Col span={12}>
-            <span style={{ fontSize: '14px' }}>First Name</span>
+            <span style={{ fontSize: "14px" }}>First Name</span>
             <Input
               value={firstName}
               onChange={handleChange}
@@ -146,7 +148,7 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
             />
           </Col>
           <Col span={12}>
-            <span style={{ fontSize: '14px' }}>Last Name</span>
+            <span style={{ fontSize: "14px" }}>Last Name</span>
             <Input
               name="lastName"
               value={lastName}
@@ -159,7 +161,7 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
         </Row>
         <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
           <Col span={12}>
-            <span style={{ fontSize: '14px' }}>Other Name</span>
+            <span style={{ fontSize: "14px" }}>Other Name</span>
             <Input
               value={otherName}
               onChange={handleChange}
@@ -170,7 +172,7 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
             />
           </Col>
           <Col span={12}>
-            <span style={{ fontSize: '14px' }}>Email</span>
+            <span style={{ fontSize: "14px" }}>Email</span>
             <Input
               value={email}
               onChange={handleChange}
@@ -184,19 +186,18 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
 
         <Row gutter={{ xs: 8, sm: 16, md: 18 }} className="mb-3">
           <Col span={12}>
-            <span style={{ fontSize: '14px' }}>Department</span>
-            <Select
-              onChange={(e) => {
-                const newDepartment = [...department, e];
-
-                formik.values.department = newDepartment;
-              }}
+            <span style={{ fontSize: "14px" }}>Password</span>
+            <Input
+              value={password}
+              onChange={handleChange}
+              name="password"
               className="h-[38px] w-[100%] mb-3"
-              options={departmentList}
+              variant="outlined"
+              placeholder="Enter Password"
             />
           </Col>
           <Col span={12}>
-            <span style={{ fontSize: '14px' }}>Role</span>
+            <span style={{ fontSize: "14px" }}>Role</span>
             <Select
               value={role}
               onChange={(e) => {
@@ -206,10 +207,25 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
               className="h-[38px] w-[100%] mb-3"
               defaultValue="user"
               options={[
-                { value: 'user', label: 'User' },
-                { value: 'admin', label: 'Admin' },
-                { value: 'super_admin', label: 'Super Administrator' },
+                { value: "user", label: "User" },
+                { value: "admin", label: "Admin" },
+                { value: "super_admin", label: "Super Administrator" },
               ]}
+            />
+          </Col>
+        </Row>
+        <Row gutter={{ xs: 8, sm: 16, md: 18 }} className="mb-3">
+          <Col span={24}>
+            <span style={{ fontSize: "14px" }}>Department</span>
+            <Select
+              mode="multiple"
+              onChange={(e) => {
+                const newDepartment = [...department, e];
+
+                formik.values.department = newDepartment;
+              }}
+              className="h-[38px] w-[100%] mb-3"
+              options={departmentList}
             />
           </Col>
         </Row>
@@ -221,11 +237,11 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
             checkedChildren={<CheckOutlined />}
             unCheckedChildren={<CloseOutlined />}
             defaultChecked
-          />{' '}
+          />{" "}
           Make active
         </span>
-        <Row style={{ margin: '30px 0' }}>
-          <Col />{' '}
+        <Row style={{ margin: "30px 0" }}>
+          <Col />{" "}
         </Row>
       </Modal>
     </>
