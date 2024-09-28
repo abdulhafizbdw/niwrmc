@@ -12,6 +12,8 @@ import BackgroundImg from '../../assets/bg.png';
 import logo from '../../assets/logo-niwrmc.svg';
 import { useNavigate } from 'react-router-dom';
 import { useLoginAccountMutation } from '../../redux/api/services/AuthService';
+import { useDispatch } from 'react-redux';
+import { setDepartment, setUserMail } from '../../redux/slices/userSlice';
 const validationSchema = Yup.object({
   email: Yup.string()
     .email('Invalid email format')
@@ -22,7 +24,7 @@ const validationSchema = Yup.object({
 });
 export default function Login() {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginAccountMutation();
   const formik = useFormik({
     initialValues: {
@@ -38,6 +40,8 @@ export default function Login() {
         } else {
           notification.success({ message: 'Logged in Successfully' });
           navigate('/files');
+          dispatch(setUserMail(values.email));
+          dispatch(setDepartment(loggedIn.data.user.department));
         }
       } catch (error) {
         notification.error('Something went wrong');

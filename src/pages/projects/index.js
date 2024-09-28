@@ -19,7 +19,6 @@ export default function Projects() {
     {
       key: "1",
       label: "View",
-      onClick: () => navigate("/view-project"),
     },
     {
       key: "2",
