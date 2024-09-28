@@ -5,6 +5,7 @@ const initialState = {
   email: '',
   password: '',
   token: '',
+  department: [],
 };
 const userSlice = createSlice({
   name: 'user',
@@ -13,9 +14,15 @@ const userSlice = createSlice({
     onboardUser: (state) => {
       state.onboarded = true;
     },
+    setUserMail: (state, action) => {
+      state.email = action.payload;
+    },
+    setDepartment: (state, action) => {
+      state.department = action.payload;
+    },
   },
 });
 
-export const { onboardUser } = userSlice.actions;
+export const { onboardUser, setUserMail, setDepartment } = userSlice.actions;
 
 export default userSlice.reducer;
