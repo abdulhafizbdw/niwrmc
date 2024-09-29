@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
+import React, { useEffect, useState } from "react";
+import * as Yup from "yup";
+import { useFormik } from "formik";
 import {
   Button,
   Modal,
@@ -11,41 +11,42 @@ import {
   Divider,
   Switch,
   notification,
-} from 'antd';
+  Form,
+} from "antd";
 import {
   CheckCircleOutlined,
   CheckOutlined,
   CloseOutlined,
-} from '@ant-design/icons';
-import { useGetDepartmentsQuery } from '../../../redux/api/services/DepartmentService';
-import { useCreateAccountMutation } from '../../../redux/api/services/AuthService';
+} from "@ant-design/icons";
+import { useGetDepartmentsQuery } from "../../../redux/api/services/DepartmentService";
+import { useCreateAccountMutation } from "../../../redux/api/services/AuthService";
 const validationSchema = Yup.object({
-  firstName: Yup.string().required('First Name is required'),
-  lastName: Yup.string().required('Last Name is required'),
+  firstName: Yup.string().required("First Name is required"),
+  lastName: Yup.string().required("Last Name is required"),
   otherName: Yup.string().optional(), // Optional field
-  user_id: Yup.string().required('User ID is required'),
+  user_id: Yup.string().required("User ID is required"),
   email: Yup.string()
-    .email('Invalid email format')
-    .required('Email is required'),
+    .email("Invalid email format")
+    .required("Email is required"),
   password: Yup.string()
-    .min(6, 'Password must be at least 6 characters')
-    .required('Password is required'),
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
   department: Yup.array()
     .of(Yup.string())
-    .min(1, 'At least one role is required'),
-  role: Yup.array().of(Yup.string()).min(1, 'At least one role is required'),
+    .min(1, "At least one role is required"),
+  role: Yup.array().of(Yup.string()).min(1, "At least one role is required"),
 });
 
 const initialValues = {
-  firstName: '',
-  lastName: '',
-  otherName: '',
-  user_id: '',
-  email: '',
-  password: '12345678',
+  firstName: "",
+  lastName: "",
+  otherName: "",
+  user_id: "",
+  email: "",
+  password: "12345678",
   isActive: true, // Boolean field, set to false initially
   department: [],
-  role: ['user'], // Default role as 'user'
+  role: ["user"], // Default role as 'user'
 };
 const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
   const [departmentList, setDepartments] = useState([]);
@@ -62,19 +63,18 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
         if (loggedIn.error) {
           notification.error({ message: loggedIn.error.data.message });
         } else {
-          notification.success({ message: 'Created Successfully' });
-
-         
+          notification.success({ message: "Created Successfully" });
+          // navigate('/files');
         }
       } catch (error) {
-        notification.error('Something went wrong');
+        notification.error("Something went wrong");
       }
     },
   });
 
   const {
     email,
-
+    password,
     firstName,
     lastName,
     otherName,
@@ -114,106 +114,204 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
                 handleSubmit();
               }}
               type="primary"
-              className="bg-PrimaryColor">
+              className="bg-PrimaryColor"
+            >
               <CheckCircleOutlined />
               Submit
             </Button>
           </>
-        )}>
-        <Divider style={{ marginTop: '2px', marginBottom: '35px' }} />
-        <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
-          <Col span={12}>
-            <span style={{ fontSize: '14px' }}>User ID</span>
-            <Input
-              value={user_id}
-              onChange={handleChange}
-              name="user_id"
-              className="h-[38px] w-[100%] mb-3"
-              variant="outlined"
-              placeholder="ID"
-            />
-          </Col>
-        </Row>
-        <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
-          <Col span={12}>
-            <span style={{ fontSize: '14px' }}>First Name</span>
-            <Input
-              value={firstName}
-              onChange={handleChange}
-              name="firstName"
-              className="h-[38px] w-[100%] mb-3"
-              variant="outlined"
-              placeholder="Enter Name"
-            />
-          </Col>
-          <Col span={12}>
-            <span style={{ fontSize: '14px' }}>Last Name</span>
-            <Input
-              name="lastName"
-              value={lastName}
-              onChange={handleChange}
-              className="h-[38px] w-[100%] mb-3"
-              variant="outlined"
-              placeholder="Enter Last Name"
-            />
-          </Col>
-        </Row>
-        <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
-          <Col span={12}>
-            <span style={{ fontSize: '14px' }}>Other Name</span>
-            <Input
-              value={otherName}
-              onChange={handleChange}
-              name="otherName"
-              className="h-[38px] w-[100%] mb-3"
-              variant="outlined"
-              placeholder="Enter Other Name"
-            />
-          </Col>
-          <Col span={12}>
-            <span style={{ fontSize: '14px' }}>Email</span>
-            <Input
-              value={email}
-              onChange={handleChange}
-              name="email"
-              className="h-[38px] w-[100%] mb-3"
-              variant="outlined"
-              placeholder="Enter Email"
-            />
-          </Col>
-        </Row>
+        )}
+      >
+        <Divider style={{ marginTop: "2px", marginBottom: "35px" }} />
+        <Form layout="vertical">
+          <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
+            <Col span={12}>
+              <Form.Item
+                label="User ID"
+                name="user_id"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                style={{ marginBottom: "0" }}
+              >
+                <Input
+                  value={user_id}
+                  onChange={handleChange}
+                  name="user_id"
+                  className="h-[38px] w-[100%] mb-3"
+                  variant="outlined"
+                  placeholder="ID"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
+            <Col span={12}>
+              <Form.Item
+                label="First Name"
+                name="firstName"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                style={{ marginBottom: "0" }}
+              >
+                <Input
+                  value={firstName}
+                  onChange={handleChange}
+                  name="firstName"
+                  className="h-[38px] w-[100%] mb-3"
+                  variant="outlined"
+                  placeholder="Enter Name"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Last Name"
+                name="lastName"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                style={{ marginBottom: "0" }}
+              >
+                <Input
+                  name="lastName"
+                  value={lastName}
+                  onChange={handleChange}
+                  className="h-[38px] w-[100%] mb-3"
+                  variant="outlined"
+                  placeholder="Enter Last Name"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
+            <Col span={12}>
+              <Form.Item
+                label="Other Name"
+                name="otherName"
+                rules={[
+                  {
+                    required: false,
+                  },
+                ]}
+                style={{ marginBottom: "0" }}
+              >
+                <Input
+                  value={otherName}
+                  onChange={handleChange}
+                  name="otherName"
+                  className="h-[38px] w-[100%] mb-3"
+                  variant="outlined"
+                  placeholder="Enter Other Name"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                style={{ marginBottom: "0" }}
+              >
+                <Input
+                  value={email}
+                  onChange={handleChange}
+                  name="email"
+                  className="h-[38px] w-[100%] mb-3"
+                  variant="outlined"
+                  placeholder="Enter Email"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
-        <Row gutter={{ xs: 8, sm: 16, md: 18 }} className="mb-3">
-          <Col span={12}>
-            <span style={{ fontSize: '14px' }}>Department</span>
-            <Select
-              onChange={(e) => {
-                const newDepartment = [...department, e];
+          <Row gutter={{ xs: 8, sm: 16, md: 18 }} className="mb-3">
+            <Col span={12}>
+              <Form.Item
+                label="Password"
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                style={{ marginBottom: "0" }}
+              >
+                <Input
+                  value={password}
+                  onChange={handleChange}
+                  name="password"
+                  className="h-[38px] w-[100%] mb-3"
+                  variant="outlined"
+                  placeholder="Enter Password"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Role"
+                name="role"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                style={{ marginBottom: "0" }}
+              >
+                <Select
+                  value={role}
+                  onChange={(e) => {
+                    const newRole = [...role, e];
+                    formik.values.role = newRole;
+                  }}
+                  className="h-[38px] w-[100%] mb-3"
+                  defaultValue="user"
+                  options={[
+                    { value: "user", label: "User" },
+                    { value: "admin", label: "Admin" },
+                    { value: "super_admin", label: "Super Administrator" },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={{ xs: 8, sm: 16, md: 18 }} className="mb-3">
+            <Col span={24}>
+              <Form.Item
+                label="Department"
+                name="department"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                style={{ marginBottom: "0" }}
+              >
+                <Select
+                  mode="multiple"
+                  onChange={(e) => {
+                    const newDepartment = [...department, e];
 
-                formik.values.department = newDepartment;
-              }}
-              className="h-[38px] w-[100%] mb-3"
-              options={departmentList}
-            />
-          </Col>
-          <Col span={12}>
-            <span style={{ fontSize: '14px' }}>Role</span>
-            <Select
-              value={role}
-              onChange={(e) => {
-                const newRole = [...role, e];
-                formik.values.role = newRole;
-              }}
-              className="h-[38px] w-[100%] mb-3"
-              defaultValue="user"
-              options={[
-                { value: 'user', label: 'User' },
-                { value: 'admin', label: 'Admin' },
-                { value: 'super_admin', label: 'Super Administrator' },
-              ]}
-            />
-          </Col>
-        </Row>
+                    formik.values.department = newDepartment;
+                  }}
+                  className="h-[38px] w-[100%] mb-3"
+                  options={departmentList}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
         <span className="text-[14px]">
           <Switch
             onChange={(e) => {
@@ -222,11 +320,11 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
             checkedChildren={<CheckOutlined />}
             unCheckedChildren={<CloseOutlined />}
             defaultChecked
-          />{' '}
+          />{" "}
           Make active
         </span>
-        <Row style={{ margin: '30px 0' }}>
-          <Col />{' '}
+        <Row style={{ margin: "30px 0" }}>
+          <Col />{" "}
         </Row>
       </Modal>
     </>
