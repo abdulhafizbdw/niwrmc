@@ -185,7 +185,6 @@ export default function Files() {
   const gtMyFiles = async () => {
     const allFiles = await getFiles({ departments: department });
     const allpendingFiles = await getPendingFiles({ ids: department });
-
     if (allFiles.data) {
       const editedData = [];
       const pendingFiles = [];

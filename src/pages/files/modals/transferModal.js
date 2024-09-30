@@ -33,7 +33,6 @@ const TransferModal = ({
     setTimeout(() => {}, 2000);
   };
   const handleCancel = () => {
-    console.log('Clicked cancel button');
     setOpenConfirmModal(false);
   };
 
