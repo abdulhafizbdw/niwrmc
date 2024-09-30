@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import * as Yup from "yup";
-import { useFormik } from "formik";
+import React, { useEffect, useState } from 'react';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
 import {
   Button,
   Modal,
@@ -12,43 +12,43 @@ import {
   Switch,
   notification,
   Form,
-} from "antd";
+} from 'antd';
 import {
   CheckCircleOutlined,
   CheckOutlined,
   CloseOutlined,
-} from "@ant-design/icons";
-import { useGetDepartmentsQuery } from "../../../redux/api/services/DepartmentService";
-import { useCreateAccountMutation } from "../../../redux/api/services/AuthService";
+} from '@ant-design/icons';
+import { useGetDepartmentsQuery } from '../../../redux/api/services/DepartmentService';
+import { useCreateAccountMutation } from '../../../redux/api/services/AuthService';
 const validationSchema = Yup.object({
-  firstName: Yup.string().required("First Name is required"),
-  lastName: Yup.string().required("Last Name is required"),
+  firstName: Yup.string().required('First Name is required'),
+  lastName: Yup.string().required('Last Name is required'),
   otherName: Yup.string().optional(), // Optional field
-  user_id: Yup.string().required("User ID is required"),
+  user_id: Yup.string().required('User ID is required'),
   email: Yup.string()
-    .email("Invalid email format")
-    .required("Email is required"),
+    .email('Invalid email format')
+    .required('Email is required'),
   password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
+    .min(6, 'Password must be at least 6 characters')
+    .required('Password is required'),
   department: Yup.array()
     .of(Yup.string())
-    .min(1, "At least one role is required"),
-  role: Yup.array().of(Yup.string()).min(1, "At least one role is required"),
+    .min(1, 'At least one role is required'),
+  role: Yup.array().of(Yup.string()).min(1, 'At least one role is required'),
 });
 
 const initialValues = {
-  firstName: "",
-  lastName: "",
-  otherName: "",
-  user_id: "",
-  email: "",
-  password: "12345678",
+  firstName: '',
+  lastName: '',
+  otherName: '',
+  user_id: '',
+  email: '',
+  password: '12345678',
   isActive: true, // Boolean field, set to false initially
   department: [],
-  role: ["user"], // Default role as 'user'
+  role: ['user'], // Default role as 'user'
 };
-const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
+const AddUserModal = ({ open, onOk, confirmLoading, onCancel, refetch }) => {
   const [departmentList, setDepartments] = useState([]);
   const { TextArea } = Input;
   const { data } = useGetDepartmentsQuery();
@@ -57,17 +57,27 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
+      const result = data.data.filter((item) =>
+        values.department.includes(item._id)
+      );
+      const bodyData = {
+        ...values,
+        departmentsData: result,
+      };
+
       try {
-        const loggedIn = await signUp(values);
+        const loggedIn = await signUp(bodyData);
         if (loggedIn.error) {
           notification.error({ message: loggedIn.error.data.message });
         } else {
-          notification.success({ message: "Created Successfully" });
+          notification.success({ message: 'Created Successfully' });
+          formik.resetForm();
+          onCancel();
+          refetch();
           // navigate('/files');
         }
       } catch (error) {
-        notification.error("Something went wrong");
+        notification.error('Something went wrong');
       }
     },
   });
@@ -114,15 +124,13 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
                 handleSubmit();
               }}
               type="primary"
-              className="bg-PrimaryColor"
-            >
+              className="bg-PrimaryColor">
               <CheckCircleOutlined />
               Submit
             </Button>
           </>
-        )}
-      >
-        <Divider style={{ marginTop: "2px", marginBottom: "35px" }} />
+        )}>
+        <Divider style={{ marginTop: '2px', marginBottom: '35px' }} />
         <Form layout="vertical">
           <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
             <Col span={12}>
@@ -134,8 +142,7 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
                     required: true,
                   },
                 ]}
-                style={{ marginBottom: "0" }}
-              >
+                style={{ marginBottom: '0' }}>
                 <Input
                   value={user_id}
                   onChange={handleChange}
@@ -157,8 +164,7 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
                     required: true,
                   },
                 ]}
-                style={{ marginBottom: "0" }}
-              >
+                style={{ marginBottom: '0' }}>
                 <Input
                   value={firstName}
                   onChange={handleChange}
@@ -178,8 +184,7 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
                     required: true,
                   },
                 ]}
-                style={{ marginBottom: "0" }}
-              >
+                style={{ marginBottom: '0' }}>
                 <Input
                   name="lastName"
                   value={lastName}
@@ -201,8 +206,7 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
                     required: false,
                   },
                 ]}
-                style={{ marginBottom: "0" }}
-              >
+                style={{ marginBottom: '0' }}>
                 <Input
                   value={otherName}
                   onChange={handleChange}
@@ -222,8 +226,7 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
                     required: true,
                   },
                 ]}
-                style={{ marginBottom: "0" }}
-              >
+                style={{ marginBottom: '0' }}>
                 <Input
                   value={email}
                   onChange={handleChange}
@@ -246,8 +249,7 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
                     required: true,
                   },
                 ]}
-                style={{ marginBottom: "0" }}
-              >
+                style={{ marginBottom: '0' }}>
                 <Input
                   value={password}
                   onChange={handleChange}
@@ -267,20 +269,19 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
                     required: true,
                   },
                 ]}
-                style={{ marginBottom: "0" }}
-              >
+                style={{ marginBottom: '0' }}>
                 <Select
                   value={role}
                   onChange={(e) => {
-                    const newRole = [...role, e];
+                    const newRole = [e];
                     formik.values.role = newRole;
                   }}
                   className="h-[38px] w-[100%] mb-3"
                   defaultValue="user"
                   options={[
-                    { value: "user", label: "User" },
-                    { value: "admin", label: "Admin" },
-                    { value: "super_admin", label: "Super Administrator" },
+                    { value: 'user', label: 'User' },
+                    { value: 'admin', label: 'Admin' },
+                    { value: 'super_admin', label: 'Super Administrator' },
                   ]}
                 />
               </Form.Item>
@@ -296,14 +297,11 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
                     required: true,
                   },
                 ]}
-                style={{ marginBottom: "0" }}
-              >
+                style={{ marginBottom: '0' }}>
                 <Select
                   mode="multiple"
                   onChange={(e) => {
-                    const newDepartment = [...department, e];
-
-                    formik.values.department = newDepartment;
+                    formik.values.department = e;
                   }}
                   className="h-[38px] w-[100%] mb-3"
                   options={departmentList}
@@ -320,11 +318,11 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel }) => {
             checkedChildren={<CheckOutlined />}
             unCheckedChildren={<CloseOutlined />}
             defaultChecked
-          />{" "}
+          />{' '}
           Make active
         </span>
-        <Row style={{ margin: "30px 0" }}>
-          <Col />{" "}
+        <Row style={{ margin: '30px 0' }}>
+          <Col />{' '}
         </Row>
       </Modal>
     </>

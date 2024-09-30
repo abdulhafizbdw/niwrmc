@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Modal,
@@ -8,11 +8,11 @@ import {
   Select,
   Divider,
   notification,
-} from "antd";
-import { ArrowRightOutlined } from "@ant-design/icons";
-import { useGetDepartmentsQuery } from "../../../redux/api/services/DepartmentService";
-import { useTransferFileMutation } from "../../../redux/api/services/FileService";
-import ConfirmTransferModal from "./confirmTransfer";
+} from 'antd';
+import { ArrowRightOutlined } from '@ant-design/icons';
+import { useGetDepartmentsQuery } from '../../../redux/api/services/DepartmentService';
+import { useTransferFileMutation } from '../../../redux/api/services/FileService';
+import ConfirmTransferModal from './confirmTransfer';
 
 const TransferModal = ({
   open,
@@ -33,7 +33,6 @@ const TransferModal = ({
     setTimeout(() => {}, 2000);
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpenConfirmModal(false);
   };
 
@@ -65,7 +64,7 @@ const TransferModal = ({
               onClick={async () => {
                 if (!tranferTo) {
                   notification.error({
-                    message: "Please select department to transfer to",
+                    message: 'Please select department to transfer to',
                   });
                 }
                 try {
@@ -86,24 +85,22 @@ const TransferModal = ({
                     onCancel();
                   }
                 } catch (error) {
-                  notification.error("Something went wrong");
+                  notification.error('Something went wrong');
                 }
               }}
               // onClick={() => setOpenConfirmModal(true)}
               type="primary"
-              className="bg-PrimaryColor"
-            >
+              className="bg-PrimaryColor">
               Transfer
               <ArrowRightOutlined />
             </Button>
           </>
-        )}
-      >
-        <Divider style={{ marginTop: "2px", marginBottom: "35px" }} />
+        )}>
+        <Divider style={{ marginTop: '2px', marginBottom: '35px' }} />
 
         <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
           <Col span={24}>
-            <span style={{ fontSize: "14px" }}>Transfer to</span>
+            <span style={{ fontSize: '14px' }}>Transfer to</span>
             <Select
               onChange={(e) => {
                 setTransferTo({
@@ -117,8 +114,8 @@ const TransferModal = ({
           </Col>
         </Row>
 
-        <Row style={{ margin: "30px 0" }}>
-          <Col />{" "}
+        <Row style={{ margin: '30px 0' }}>
+          <Col />{' '}
         </Row>
       </Modal>
       <ConfirmTransferModal
