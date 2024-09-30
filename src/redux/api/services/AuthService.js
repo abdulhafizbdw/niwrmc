@@ -16,8 +16,16 @@ const injectedUserApi = api.injectEndpoints({
         body: req,
       }),
     }),
+    getUsers: builder.query({
+      query: () => ({
+        url: `/all_users`,
+      }),
+    }),
   }),
 });
 
-export const { useCreateAccountMutation, useLoginAccountMutation } =
-  injectedUserApi;
+export const {
+  useCreateAccountMutation,
+  useLoginAccountMutation,
+  useGetUsersQuery,
+} = injectedUserApi;

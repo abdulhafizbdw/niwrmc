@@ -12,6 +12,7 @@ import {
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { useGetDepartmentsQuery } from '../../../redux/api/services/DepartmentService';
 import { useTransferFileMutation } from '../../../redux/api/services/FileService';
+import ConfirmTransferModal from './confirmTransfer';
 
 const TransferModal = ({
   open,
@@ -25,6 +26,17 @@ const TransferModal = ({
   const [tranferTo, setTransferTo] = useState(undefined);
   const { data } = useGetDepartmentsQuery();
   const [transferFile, { isLoading }] = useTransferFileMutation();
+
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
+
+  const handleOk = () => {
+    setTimeout(() => {}, 2000);
+  };
+  const handleCancel = () => {
+    console.log('Clicked cancel button');
+    setOpenConfirmModal(false);
+  };
+
   useEffect(() => {
     if (data) {
       const newData = data.data.map((dp) => ({
@@ -77,6 +89,7 @@ const TransferModal = ({
                   notification.error('Something went wrong');
                 }
               }}
+              // onClick={() => setOpenConfirmModal(true)}
               type="primary"
               className="bg-PrimaryColor">
               Transfer
@@ -106,6 +119,11 @@ const TransferModal = ({
           <Col />{' '}
         </Row>
       </Modal>
+      <ConfirmTransferModal
+        open={openConfirmModal}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      />
     </>
   );
 };

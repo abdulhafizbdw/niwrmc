@@ -72,10 +72,12 @@ export default function Files() {
     {
       key: '1',
       label: 'View',
+      onClick: () => navigate('/view-file'),
     },
     {
       key: '2',
       label: 'Edit',
+      onClick: () => navigate('/view-file'),
     },
     {
       key: '3',
@@ -183,7 +185,7 @@ export default function Files() {
   const gtMyFiles = async () => {
     const allFiles = await getFiles({ departments: department });
     const allpendingFiles = await getPendingFiles({ ids: department });
-    console.log(allpendingFiles, department, 'pppp');
+
     if (allFiles.data) {
       const editedData = [];
       const pendingFiles = [];
