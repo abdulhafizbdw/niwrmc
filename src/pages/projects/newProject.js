@@ -11,6 +11,7 @@ import {
   Form,
   Upload,
   theme,
+  DatePicker,
 } from "antd";
 import { UserOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import deleteIcon from "../../assets/delete.svg";
@@ -112,11 +113,25 @@ export default function NewProject() {
                         "Catchment Management & Water Utilization Department",
                     },
                     {
+                      value: "prdept",
+                      label: "Procurement Department",
+                    },
+                    {
                       value: "financedept",
                       label: "Finance & Account Department",
                     },
                   ]}
                 />
+              </Col>
+            </Row>
+            <Row align="middle" gutter={{ xs: 8, sm: 16, md: 34 }}>
+              <Col span={12}>
+                <span style={{ fontSize: "14px" }}>Start Date</span>
+                <DatePicker className="h-[38px] w-[100%] mb-3" />
+              </Col>
+              <Col span={12}>
+                <span style={{ fontSize: "14px" }}>End Date</span>
+                <DatePicker className="h-[38px] w-[100%] mb-3" />
               </Col>
             </Row>
             <Row align="middle" gutter={{ xs: 8, sm: 16, md: 34 }}>
@@ -225,7 +240,7 @@ export default function NewProject() {
                 type="link"
                 block
                 className="text-PrimaryColor"
-                onClick={() => navigate("/files")}
+                onClick={() => navigate("/projects")}
               >
                 Back to Projects
               </Button>

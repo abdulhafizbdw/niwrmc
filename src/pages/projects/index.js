@@ -19,10 +19,12 @@ export default function Projects() {
     {
       key: "1",
       label: "View",
+      onClick: () => navigate("/view-project"),
     },
     {
       key: "2",
       label: "Edit",
+      onClick: () => navigate("/view-project"),
     },
   ];
 
