@@ -72,6 +72,8 @@ export default function NewFile() {
           {
             message: values.comments,
             email,
+            department: departmentList.find((d) => d.value == values.department)
+              .label,
           },
         ],
         originalDepartment: {

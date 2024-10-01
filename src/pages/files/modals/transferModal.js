@@ -21,6 +21,7 @@ const TransferModal = ({
   onCancel,
   fileId,
   reload,
+  fileName,
 }) => {
   const [departmentList, setDepartments] = useState([]);
   const [tranferTo, setTransferTo] = useState(undefined);
@@ -46,6 +47,35 @@ const TransferModal = ({
       setDepartments(newData);
     }
   }, [data]);
+  const handleTransfer = async () => {
+    if (!tranferTo) {
+      notification.error({
+        message: 'Please select department to transfer to',
+      });
+    }
+    setOpenConfirmModal(true);
+
+    try {
+      const transfered = await transferFile({
+        fileId,
+        transferedTo: tranferTo,
+      });
+      if (transfered.error) {
+        notification.error({
+          message: transfered.error.data.message,
+        });
+      } else {
+        notification.success({
+          message: `Transfered File to ${tranferTo.name}`,
+        });
+        setTransferTo(undefined);
+        reload();
+        onCancel();
+      }
+    } catch (error) {
+      notification.error('Something went wrong');
+    }
+  };
   return (
     <>
       <Modal
@@ -61,33 +91,7 @@ const TransferModal = ({
             <CancelBtn />
             <Button
               loading={isLoading}
-              onClick={async () => {
-                if (!tranferTo) {
-                  notification.error({
-                    message: 'Please select department to transfer to',
-                  });
-                }
-                try {
-                  const transfered = await transferFile({
-                    fileId,
-                    transferedTo: tranferTo,
-                  });
-                  if (transfered.error) {
-                    notification.error({
-                      message: transfered.error.data.message,
-                    });
-                  } else {
-                    notification.success({
-                      message: `Transfered File to ${tranferTo.name}`,
-                    });
-                    setTransferTo(undefined);
-                    reload();
-                    onCancel();
-                  }
-                } catch (error) {
-                  notification.error('Something went wrong');
-                }
-              }}
+              onClick={() => setOpenConfirmModal(true)}
               // onClick={() => setOpenConfirmModal(true)}
               type="primary"
               className="bg-PrimaryColor">
@@ -119,9 +123,13 @@ const TransferModal = ({
         </Row>
       </Modal>
       <ConfirmTransferModal
+        fileName={fileName}
+        transferFileName={tranferTo?.name}
         open={openConfirmModal}
         onOk={handleOk}
         onCancel={handleCancel}
+        handleTransfer={handleTransfer}
+        isLoading={isLoading}
       />
     </>
   );
