@@ -29,17 +29,20 @@ import {
   useGetFileByDepartmentsMutation,
   useGetPendingFilesMutation,
 } from '../../redux/api/services/FileService';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentFile } from '../../redux/slices/currentFileSlice';
 
 export default function Files() {
   const navigate = useNavigate();
   const [refresh, setRefresh] = useState(0);
   const department = useSelector((data) => data.user.department);
   const [fileId, setFileId] = useState('');
+  const [fileName, setFileName] = useState('');
   const [allFiles, setAllFiles] = useState([]);
   const [pendingFiles, setAllPendingFiles] = useState([]);
   const [transferedFiles, setAllTransferedFiles] = useState([]);
   const [getFiles, { isLoading }] = useGetFileByDepartmentsMutation();
+  const dispatch = useDispatch();
   const [getPendingFiles, { isLoading: isGetting }] =
     useGetPendingFilesMutation();
   const {
@@ -122,6 +125,8 @@ export default function Files() {
         <Space
           onClick={() => {
             setFileId(record._id);
+            setFileName(record.title);
+            dispatch(setCurrentFile(record));
           }}
           size="middle">
           <Dropdown
@@ -387,6 +392,7 @@ export default function Files() {
             <TransferModal
               reload={reload}
               fileId={fileId}
+              fileName={fileName}
               open={open}
               onOk={handleOk}
               confirmLoading={confirmLoading}

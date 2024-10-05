@@ -1,7 +1,15 @@
-import React from "react";
-import { Button, Modal, Col, Row, Divider } from "antd";
+import React from 'react';
+import { Button, Modal, Col, Row, Divider } from 'antd';
 
-const ConfirmTransferModal = ({ open, onOk, onCancel }) => {
+const ConfirmTransferModal = ({
+  open,
+  onOk,
+  onCancel,
+  fileName,
+  transferFileName,
+  handleTransfer,
+  isLoading,
+}) => {
   return (
     <>
       <Modal
@@ -14,29 +22,33 @@ const ConfirmTransferModal = ({ open, onOk, onCancel }) => {
         footer={(_, { CancelBtn }) => (
           <>
             <CancelBtn />
-            <Button type="primary" className="bg-PrimaryColor w-[100px]">
+            <Button
+              loading={isLoading}
+              onClick={() => {
+                handleTransfer();
+                onOk();
+              }}
+              type="primary"
+              className="bg-PrimaryColor w-[100px]">
               Yes
             </Button>
           </>
-        )}
-      >
-        <Divider style={{ marginTop: "2px", marginBottom: "35px" }} />
+        )}>
+        <Divider style={{ marginTop: '2px', marginBottom: '35px' }} />
 
         <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
           <Col
             span={20}
             offset={2}
-            style={{ fontSize: "16px", textAlign: "center" }}
-          >
+            style={{ fontSize: '16px', textAlign: 'center' }}>
             <span>
-              Are you sure you want to transfer {"{Name_of_file}"} to{" "}
-              {"{Department}"}? {/*Add name of file and department */}
+              Are you sure you want to transfer {fileName} to {transferFileName}
             </span>
           </Col>
         </Row>
 
-        <Row style={{ margin: "30px 0" }}>
-          <Col />{" "}
+        <Row style={{ margin: '30px 0' }}>
+          <Col />{' '}
         </Row>
       </Modal>
     </>
