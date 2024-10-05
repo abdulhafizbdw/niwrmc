@@ -30,6 +30,13 @@ const injectedUserApi = api.injectEndpoints({
         body: req,
       }),
     }),
+    editFile: builder.mutation({
+      query: (req) => ({
+        url: `/file/edit`,
+        method: 'POST',
+        body: req,
+      }),
+    }),
   }),
 });
 
@@ -38,4 +45,5 @@ export const {
   useGetFileByDepartmentsMutation,
   useTransferFileMutation,
   useGetPendingFilesMutation,
+  useEditFileMutation,
 } = injectedUserApi;
