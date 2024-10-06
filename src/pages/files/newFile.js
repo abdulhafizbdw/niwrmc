@@ -312,7 +312,11 @@ export default function NewFile() {
               <Button
                 loading={creating}
                 onClick={() => {
-                  formik.values.uploads = uploads;
+                  const filteredUpload = uploads.filter(
+                    (upload) => upload.title !== ''
+                  );
+                  formik.values.uploads = filteredUpload;
+
                   handleSubmit();
                 }}
                 type="primary"
