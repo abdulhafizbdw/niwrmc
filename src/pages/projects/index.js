@@ -19,10 +19,12 @@ import Icon3 from '../../assets/awaitingicon.svg';
 import { useNavigate } from 'react-router-dom';
 import { useGetFolderByDepartmentsMutation } from '../../redux/api/services/FolderService';
 import moment from 'moment';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentProject } from '../../redux/slices/currentProjectSlice';
 
 export default function Projects() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [getFolder, { isLoading }] = useGetFolderByDepartmentsMutation();
   const [allProject, setAllProject] = useState([]);
   const [allCompletedProject, setAllCompletedProject] = useState([]);
@@ -41,7 +43,8 @@ export default function Projects() {
         );
 
         // Calculate the percentage in relation to 100%
-        const currentPercentage = (totalPercentage / 100) * 100;
+        const currentPercentage =
+          (totalPercentage / item.milestone.length / 100) * 100;
 
         editedData.push({
           ...item,
@@ -49,10 +52,10 @@ export default function Projects() {
           endDate: moment(item.endDate).format('YYYY-MM-DD'),
           company: item.company,
           origin: item.originalDepartment.name,
-          percentage: `${currentPercentage} %`,
+          percentage: `${Math.round(currentPercentage)} %`,
         });
 
-        if (item.projectDone) {
+        if (currentPercentage == 100) {
           completedProjects.push({
             ...item,
             startDate: moment(item.startDate).format('YYYY-MM-DD'),
@@ -76,7 +79,9 @@ export default function Projects() {
     {
       key: '1',
       label: 'View',
-      onClick: () => navigate('/view-project'),
+      onClick: () => {
+        navigate('/view-project');
+      },
     },
     {
       key: '2',
@@ -120,8 +125,12 @@ export default function Projects() {
       title: 'Action',
       key: 'action',
       dataIndex: 'action',
-      render: () => (
-        <Space size="middle">
+      render: (_, record) => (
+        <Space
+          onClick={() => {
+            dispatch(setCurrentProject(record));
+          }}
+          size="middle">
           <Dropdown
             menu={{
               items,
