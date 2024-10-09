@@ -28,7 +28,7 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import TransferModal from './modals/transferModal';
 import { useEditFileMutation } from '../../redux/api/services/FileService';
@@ -36,7 +36,10 @@ import { useGetDepartmentsQuery } from '../../redux/api/services/DepartmentServi
 
 export default function ViewFile() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [editFile, { isLoading: editing }] = useEditFileMutation();
+  const [downloadingFile, setDownloading] = useState(false);
+  const [currentUrl, setCurrentUrl] = useState(false);
   const [newComment, setNewCooment] = useState();
   const { data } = useGetDepartmentsQuery();
   const {
@@ -48,7 +51,7 @@ export default function ViewFile() {
   const [uploading, setUploading] = useState(false);
   const email = useSelector((data) => data.user.email);
   const myDepartments = useSelector((data) => data.user.department);
-  const [edit, setEdit] = useState(false);
+  const [edit, setEdit] = useState(location.state.isEdit);
   const [open, setOpen] = useState(false);
   const handleCancel = () => {
     setOpen(false);
@@ -135,12 +138,14 @@ export default function ViewFile() {
         notification.error({ message: isCreated.error.data.message });
       } else {
         notification.success({ message: 'Edited File Successfully' });
-        navigate('/files');
+        // navigate('/files');
       }
     },
   });
   const downloadFile = async (url, filename) => {
     try {
+      setCurrentUrl(url);
+      setDownloading(true);
       // Fetch the file from the given URL
       const response = await fetch(url);
       const blob = await response.blob(); // Convert the response to a Blob (binary data)
@@ -152,7 +157,9 @@ export default function ViewFile() {
       document.body.appendChild(link);
       link.click();
       link.remove(); // Clean up after download
+      setDownloading(false);
     } catch (error) {
+      setDownloading(false);
       console.error('File download failed:', error);
     }
   };
@@ -235,7 +242,7 @@ export default function ViewFile() {
                   </span>
                   <TextArea
                     name={`comments[${ind}].message`}
-                    disabled={comment.email !== email}
+                    disabled={comment.email !== email || !edit}
                     value={comment.message}
                     rows={3}
                     className="h-[38px] w-[100%] mb-3"
@@ -298,6 +305,7 @@ export default function ViewFile() {
                 <Col span={3}>
                   {' '}
                   <Button
+                    loading={downloadingFile && currentUrl == upload.url}
                     onClick={() => downloadFile(upload.url, upload.title)}
                     type="primary"
                     icon={<DownloadOutlined />}
