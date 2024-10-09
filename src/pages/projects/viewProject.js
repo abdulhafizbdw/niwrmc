@@ -26,7 +26,7 @@ import {
 } from '@ant-design/icons';
 import deleteIcon from '../../assets/delete.svg';
 
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import { useGetDepartmentsQuery } from '../../redux/api/services/DepartmentService';
@@ -34,6 +34,7 @@ import { useEditFolderMutation } from '../../redux/api/services/FolderService';
 
 export default function ViewProject() {
   const navigate = useNavigate();
+  const location = useLocation();
   const currentProject = useSelector((data) => data.currentProject);
   const email = useSelector((data) => data.user.email);
   const [newUpload, setUploads] = useState([]);
@@ -42,13 +43,15 @@ export default function ViewProject() {
   const [additionalMilestone, setAdditionalMilestone] = useState(['']);
   const [departmentList, setDepartments] = useState([]);
   const [editProject, { isLoading: editing }] = useEditFolderMutation();
+  const [downloadingFile, setDownloading] = useState(false);
+  const [currentUrl, setCurrentUrl] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   const { Search, TextArea } = Input;
   const myDepartments = useSelector((data) => data.user.department);
-  const [edit, setEdit] = useState(false);
+  const [edit, setEdit] = useState(location.state.isEdit);
   const { data } = useGetDepartmentsQuery();
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -116,12 +119,14 @@ export default function ViewProject() {
         notification.error({ message: isCreated.error.data.message });
       } else {
         notification.success({ message: 'Edited Project Successfully' });
-        navigate('/projects');
+        // navigate('/projects');
       }
     },
   });
   const downloadFile = async (url, filename) => {
     try {
+      setCurrentUrl(url);
+      setDownloading(true);
       // Fetch the file from the given URL
       const response = await fetch(url);
       const blob = await response.blob(); // Convert the response to a Blob (binary data)
@@ -132,9 +137,11 @@ export default function ViewProject() {
       link.setAttribute('download', filename || 'file'); // Provide a default filename if needed
       document.body.appendChild(link);
       link.click();
-      link.remove(); // Clean up after download
+      link.remove();
+      setDownloading(false); // Clean up after download
     } catch (error) {
       console.error('File download failed:', error);
+      setDownloading(false);
     }
   };
   const { handleChange, handleSubmit } = formik;
@@ -239,44 +246,39 @@ export default function ViewProject() {
             <Row align="middle" gutter={{ xs: 8, sm: 16, md: 34 }}>
               <Col span={12}>
                 <span style={{ fontSize: '14px' }}>Start Date</span>
-                {!edit && (
-                  <Input
-                    disabled
-                    value={startDate}
-                    className="h-[38px] w-[100%] mb-3"
-                    variant="outlined"
-                    placeholder="Enter company"
-                  />
-                )}
-                {edit && (
-                  <DatePicker
-                    onChange={(date, dateString) => {
-                      formik.values.startDate = dateString;
-                    }}
-                    className="h-[38px] w-[100%] mb-3"
-                  />
-                )}
+                <Input
+                  type="date"
+                  disabled={!edit}
+                  name="startDate"
+                  onChange={handleChange}
+                  value={formik.values.startDate}
+                  className="h-[38px] w-[100%] mb-3"
+                  variant="outlined"
+                  placeholder="Enter date"
+                />
               </Col>
               <Col span={12}>
                 <span style={{ fontSize: '14px' }}>End Date</span>
 
-                {!edit && (
-                  <Input
-                    disabled
-                    value={endDate}
-                    className="h-[38px] w-[100%] mb-3"
-                    variant="outlined"
-                    placeholder="Enter company"
-                  />
-                )}
-                {edit && (
+                <Input
+                  type="date"
+                  disabled={!edit}
+                  name="endDate"
+                  onChange={handleChange}
+                  value={formik.values.endDate}
+                  className="h-[38px] w-[100%] mb-3"
+                  variant="outlined"
+                  placeholder="Enter date"
+                />
+
+                {/* {edit && (
                   <DatePicker
                     onChange={(date, dateString) => {
                       formik.values.endDate = dateString;
                     }}
                     className="h-[38px] w-[100%] mb-3"
                   />
-                )}
+                )} */}
               </Col>
             </Row>
 
@@ -445,6 +447,7 @@ export default function ViewProject() {
                 <Col span={3}>
                   {' '}
                   <Button
+                    loading={downloadingFile && currentUrl == upload.url}
                     onClick={() => downloadFile(upload.url, upload.title)}
                     type="primary"
                     icon={<DownloadOutlined />}
@@ -569,6 +572,10 @@ export default function ViewProject() {
               <Space>
                 {edit ? (
                   <Button
+                    onClick={() => {
+                      setEdit(false);
+                      setUploads([]);
+                    }}
                     ghost
                     type="primary"
                     size="large"

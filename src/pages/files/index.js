@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Input,
@@ -9,7 +9,7 @@ import {
   Tabs,
   theme,
   Skeleton,
-} from "antd";
+} from 'antd';
 import {
   MoreOutlined,
   FolderOpenOutlined,
@@ -17,29 +17,29 @@ import {
   SwapOutlined,
   HourglassOutlined,
   DeleteOutlined,
-} from "@ant-design/icons";
-import moment from "moment";
-import TileCard from "../../components/Cards/TileCard";
-import TransferModal from "./modals/transferModal";
-import Icon1 from "../../assets/foldericon.svg";
-import Icon2 from "../../assets/transfericon.svg";
-import Icon3 from "../../assets/awaitingicon.svg";
+} from '@ant-design/icons';
+import moment from 'moment';
+import TileCard from '../../components/Cards/TileCard';
+import TransferModal from './modals/transferModal';
+import Icon1 from '../../assets/foldericon.svg';
+import Icon2 from '../../assets/transfericon.svg';
+import Icon3 from '../../assets/awaitingicon.svg';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import {
   useGetFileByDepartmentsMutation,
   useGetPendingFilesMutation,
-} from "../../redux/api/services/FileService";
-import { useDispatch, useSelector } from "react-redux";
-import { setCurrentFile } from "../../redux/slices/currentFileSlice";
-import DeleteFileModal from "./modals/deleteFile";
+} from '../../redux/api/services/FileService';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentFile } from '../../redux/slices/currentFileSlice';
+import DeleteFileModal from './modals/deleteFile';
 
 export default function Files() {
   const navigate = useNavigate();
   const [refresh, setRefresh] = useState(0);
   const department = useSelector((data) => data.user.department);
-  const [fileId, setFileId] = useState("");
-  const [fileName, setFileName] = useState("");
+  const [fileId, setFileId] = useState('');
+  const [fileName, setFileName] = useState('');
   const [allFiles, setAllFiles] = useState([]);
   const [pendingFiles, setAllPendingFiles] = useState([]);
   const [transferedFiles, setAllTransferedFiles] = useState([]);
@@ -67,7 +67,7 @@ export default function Files() {
     }, 2000);
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
+    console.log('Clicked cancel button');
     setOpen(false);
     setOpenDelete(false);
   };
@@ -78,25 +78,35 @@ export default function Files() {
 
   const items = [
     {
-      key: "1",
-      label: "View",
-      onClick: () => navigate("/view-file"),
+      key: '1',
+      label: 'View',
+      onClick: () =>
+        navigate('/view-file', {
+          state: {
+            isEdit: false,
+          },
+        }),
     },
     {
-      key: "2",
-      label: "Edit",
-      onClick: () => navigate("/view-file"),
+      key: '2',
+      label: 'Edit',
+      onClick: () =>
+        navigate('/view-file', {
+          state: {
+            isEdit: true,
+          },
+        }),
     },
     {
-      key: "3",
-      label: "Transfer",
+      key: '3',
+      label: 'Transfer',
       onClick: (e) => {
         setOpen(true);
       },
     },
     {
-      key: "4",
-      label: "Delete",
+      key: '4',
+      label: 'Delete',
       danger: true,
       icon: <DeleteOutlined />,
       onClick: () => {
@@ -107,34 +117,34 @@ export default function Files() {
 
   const columns = [
     {
-      title: "Title",
-      dataIndex: "title",
-      key: "title",
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
     },
     {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
+      title: 'Type',
+      dataIndex: 'type',
+      key: 'type',
     },
     {
-      title: "No. of Items",
-      dataIndex: "items",
-      key: "items",
+      title: 'No. of Items',
+      dataIndex: 'items',
+      key: 'items',
     },
     {
-      title: "Date Created",
-      dataIndex: "date",
-      key: "date",
+      title: 'Date Created',
+      dataIndex: 'date',
+      key: 'date',
     },
     {
-      title: "Department",
-      dataIndex: "origin",
-      key: "origin",
+      title: 'Department',
+      dataIndex: 'origin',
+      key: 'origin',
     },
     {
-      title: "Action",
-      key: "action",
-      dataIndex: "action",
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
       render: (_, record) => (
         <Space
           onClick={() => {
@@ -142,13 +152,11 @@ export default function Files() {
             setFileName(record.title);
             dispatch(setCurrentFile(record));
           }}
-          size="middle"
-        >
+          size="middle">
           <Dropdown
             menu={{
               items,
-            }}
-          >
+            }}>
             <MoreOutlined />
           </Dropdown>
         </Space>
@@ -158,46 +166,45 @@ export default function Files() {
 
   const transfercolumns = [
     {
-      title: "Title",
-      dataIndex: "title",
-      key: "title",
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
     },
     {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
+      title: 'Type',
+      dataIndex: 'type',
+      key: 'type',
     },
     {
-      title: "No. of Items",
-      dataIndex: "items",
-      key: "items",
+      title: 'No. of Items',
+      dataIndex: 'items',
+      key: 'items',
     },
     {
-      title: "Date Created",
-      dataIndex: "date",
-      key: "date",
+      title: 'Date Created',
+      dataIndex: 'date',
+      key: 'date',
     },
     {
-      title: "Department",
-      dataIndex: "origin",
-      key: "origin",
+      title: 'Department',
+      dataIndex: 'origin',
+      key: 'origin',
     },
     {
-      title: "Transferred to",
-      dataIndex: "transferdept",
-      key: "transferdept",
+      title: 'Transferred to',
+      dataIndex: 'transferdept',
+      key: 'transferdept',
     },
     {
-      title: "Action",
-      key: "action",
-      dataIndex: "action",
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
       render: () => (
         <Space size="middle">
           <Dropdown
             menu={{
               items,
-            }}
-          >
+            }}>
             <MoreOutlined />
           </Dropdown>
         </Space>
@@ -216,7 +223,7 @@ export default function Files() {
           ...item,
           items: item.uploads.length,
           origin: item.originalDepartment.name,
-          date: moment(item.creation_date).format("YYYY-MM-DD"),
+          date: moment(item.creation_date).format('YYYY-MM-DD'),
         });
 
         if (item.transferedTo) {
@@ -225,7 +232,7 @@ export default function Files() {
             items: item.uploads.length,
             origin: item.originalDepartment.name,
             transferdept: item.transferedTo.name,
-            date: moment(item.creation_date).format("YYYY-MM-DD"),
+            date: moment(item.creation_date).format('YYYY-MM-DD'),
           });
         }
       });
@@ -236,7 +243,7 @@ export default function Files() {
             ...item,
             items: item.uploads.length,
             origin: item.originalDepartment.name,
-            date: moment(item.creation_date).format("YYYY-MM-DD"),
+            date: moment(item.creation_date).format('YYYY-MM-DD'),
           });
         });
       }
@@ -261,15 +268,13 @@ export default function Files() {
         minHeight: 560,
         background: colorBgContainer,
         borderRadius: borderRadiusLG,
-      }}
-    >
+      }}>
       <Flex vertical gap="large">
         <Flex
           justify="space-between"
           align="center"
           gap="large"
-          className="pb-4"
-        >
+          className="pb-4">
           <div className="flex items-center">
             <Search placeholder="Search" style={{ width: 331 }} />
           </div>
@@ -277,8 +282,7 @@ export default function Files() {
             <Button
               type="primary"
               className="text-[12px]"
-              onClick={() => navigate("/new-file")}
-            >
+              onClick={() => navigate('/new-file')}>
               <Space>Create File</Space>
             </Button>
           </div>
@@ -298,15 +302,13 @@ export default function Files() {
         minHeight: 560,
         background: colorBgContainer,
         borderRadius: borderRadiusLG,
-      }}
-    >
+      }}>
       <Flex vertical gap="large">
         <Flex
           justify="space-between"
           align="center"
           gap="large"
-          className="pb-4"
-        >
+          className="pb-4">
           <div className="flex items-center">
             <Search placeholder="Search" style={{ width: 331 }} />
           </div>
@@ -330,15 +332,13 @@ export default function Files() {
         minHeight: 560,
         background: colorBgContainer,
         borderRadius: borderRadiusLG,
-      }}
-    >
+      }}>
       <Flex vertical gap="large">
         <Flex
           justify="space-between"
           align="center"
           gap="large"
-          className="pb-4"
-        >
+          className="pb-4">
           <div className="flex items-center">
             <Search placeholder="Search" style={{ width: 331 }} />
           </div>
@@ -346,8 +346,7 @@ export default function Files() {
             <Button
               type="primary"
               className="text-[12px]"
-              onClick={() => navigate("/new-file")}
-            >
+              onClick={() => navigate('/new-file')}>
               <Space>Create File</Space>
             </Button>
           </div>
@@ -361,20 +360,20 @@ export default function Files() {
   );
   const tabItems = [
     {
-      key: "1",
-      label: "Files",
+      key: '1',
+      label: 'Files',
       icon: <FolderOpenOutlined />,
       children: files,
     },
     {
-      key: "2",
-      label: "Transferred",
+      key: '2',
+      label: 'Transferred',
       icon: <SwapOutlined />,
       children: transferred,
     },
     {
-      key: "3",
-      label: "Pending Review",
+      key: '3',
+      label: 'Pending Review',
       icon: <HourglassOutlined />,
       children: pendingfilesView,
     },
@@ -385,8 +384,7 @@ export default function Files() {
       <ul
         role="list"
         className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 p-0"
-        style={{ width: "70%" }}
-      >
+        style={{ width: '70%' }}>
         {!isLoading && (
           <>
             <TileCard
