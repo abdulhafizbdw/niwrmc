@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Input,
@@ -9,18 +9,19 @@ import {
   Tabs,
   theme,
   Skeleton,
-} from 'antd';
-import { MoreOutlined } from '@ant-design/icons';
-import TileCard from '../../components/Cards/TileCard';
-import Icon1 from '../../assets/foldericon.svg';
-import Icon2 from '../../assets/completeicon.svg';
-import Icon3 from '../../assets/awaitingicon.svg';
+} from "antd";
+import { MoreOutlined, DeleteOutlined } from "@ant-design/icons";
+import TileCard from "../../components/Cards/TileCard";
+import Icon1 from "../../assets/foldericon.svg";
+import Icon2 from "../../assets/completeicon.svg";
+import Icon3 from "../../assets/awaitingicon.svg";
 
-import { useNavigate } from 'react-router-dom';
-import { useGetFolderByDepartmentsMutation } from '../../redux/api/services/FolderService';
-import moment from 'moment';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentProject } from '../../redux/slices/currentProjectSlice';
+import { useNavigate } from "react-router-dom";
+import { useGetFolderByDepartmentsMutation } from "../../redux/api/services/FolderService";
+import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentProject } from "../../redux/slices/currentProjectSlice";
+import DeleteProjectModal from "./modals/deleteProject";
 
 export default function Projects() {
   const navigate = useNavigate();
@@ -29,6 +30,17 @@ export default function Projects() {
   const [allProject, setAllProject] = useState([]);
   const [allCompletedProject, setAllCompletedProject] = useState([]);
   const department = useSelector((data) => data.user.department);
+  const [openDelete, setOpenDelete] = useState(false);
+  const handleOk = () => {
+    setTimeout(() => {
+      setOpenDelete(false);
+    }, 2000);
+  };
+  const handleCancel = () => {
+    console.log("Clicked cancel button");
+
+    setOpenDelete(false);
+  };
   const gtMyFiles = async () => {
     const allFiles = await getFolder({ departments: department });
 
@@ -48,8 +60,8 @@ export default function Projects() {
 
         editedData.push({
           ...item,
-          startDate: moment(item.startDate).format('YYYY-MM-DD'),
-          endDate: moment(item.endDate).format('YYYY-MM-DD'),
+          startDate: moment(item.startDate).format("YYYY-MM-DD"),
+          endDate: moment(item.endDate).format("YYYY-MM-DD"),
           company: item.company,
           origin: item.originalDepartment.name,
           percentage: `${Math.round(currentPercentage)} %`,
@@ -58,8 +70,8 @@ export default function Projects() {
         if (currentPercentage == 100) {
           completedProjects.push({
             ...item,
-            startDate: moment(item.startDate).format('YYYY-MM-DD'),
-            endDate: moment(item.endDate).format('YYYY-MM-DD'),
+            startDate: moment(item.startDate).format("YYYY-MM-DD"),
+            endDate: moment(item.endDate).format("YYYY-MM-DD"),
             company: item.company,
             origin: item.originalDepartment.name,
           });
@@ -77,115 +89,79 @@ export default function Projects() {
 
   const items = [
     {
-      key: '1',
-      label: 'View',
+      key: "1",
+      label: "View",
       onClick: () => {
-        navigate('/view-project');
+        navigate("/view-project");
       },
     },
     {
-      key: '2',
-      label: 'Edit',
-      onClick: () => navigate('/view-project'),
+      key: "2",
+      label: "Edit",
+      onClick: () => navigate("/view-project"),
+    },
+    {
+      key: "3",
+      label: "Delete",
+      danger: true,
+      icon: <DeleteOutlined />,
+      onClick: () => {
+        setOpenDelete(true);
+      },
     },
   ];
 
   const columns = [
     {
-      title: 'Project Title',
-      dataIndex: 'title',
-      key: 'title',
+      title: "Project Title",
+      dataIndex: "title",
+      key: "title",
     },
     {
-      title: 'Company',
-      dataIndex: 'company',
-      key: 'company',
+      title: "Company",
+      dataIndex: "company",
+      key: "company",
     },
     {
-      title: 'Department',
-      dataIndex: 'origin',
-      key: 'origin',
+      title: "Department",
+      dataIndex: "origin",
+      key: "origin",
     },
     {
-      title: 'Start Date',
-      dataIndex: 'startDate',
-      key: 'startDate',
+      title: "Start Date",
+      dataIndex: "startDate",
+      key: "startDate",
     },
     {
-      title: 'End Date',
-      dataIndex: 'endDate',
-      key: 'endDate',
+      title: "End Date",
+      dataIndex: "endDate",
+      key: "endDate",
     },
     {
-      title: 'Progress',
-      dataIndex: 'percentage',
-      key: 'percentage',
+      title: "Progress",
+      dataIndex: "percentage",
+      key: "percentage",
     },
     {
-      title: 'Action',
-      key: 'action',
-      dataIndex: 'action',
+      title: "Action",
+      key: "action",
+      dataIndex: "action",
       render: (_, record) => (
         <Space
           onClick={() => {
             dispatch(setCurrentProject(record));
           }}
-          size="middle">
+          size="middle"
+        >
           <Dropdown
             menu={{
               items,
-            }}>
+            }}
+          >
             <MoreOutlined />
           </Dropdown>
         </Space>
       ),
-    },
-  ];
-  const data = [
-    {
-      key: '1',
-      title: 'Computer Installation',
-      company: 'Prosper Ltd.',
-      department: 'Human Resource Dept',
-      startdate: '15/09/2024',
-      enddate: '30/01/2025',
-      progress: '50%',
-    },
-    {
-      key: '2',
-      title: 'Computer Installation',
-      company: 'Lenovo Plc.',
-      department: 'Authorization & Allocation Dept',
-      startdate: '17/08/2024',
-      enddate: '16/05/2025',
-      progress: '34%',
-    },
-    {
-      key: '3',
-      title: 'Computer Installation',
-      company: 'Maguire Investment',
-      department: 'Corporate Support Services Dept',
-      startdate: '01/03/2024',
-      enddate: '30/11/2024',
-      progress: '19%',
-    },
-    {
-      key: '4',
-      title: 'Computer Installation',
-      company: 'Casablanca Holdings',
-      department: 'Catchment Management & Water Utilization Dept',
-      startdate: '10/02/2024',
-      enddate: '07/10/2024',
-      progress: '83%',
-    },
-    {
-      key: '5',
-      title: 'Computer Installation',
-      company: 'Ali and Sons',
-      department: 'Monitoring & Enforcement Dept',
-      startdate: '19/07/2023',
-      enddate: '21/12/2022',
-      progress: '99%',
     },
   ];
 
@@ -201,7 +177,8 @@ export default function Projects() {
         <ul
           role="list"
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 p-0"
-          style={{ width: '70%' }}>
+          style={{ width: "70%" }}
+        >
           <TileCard
             title="Total Projects"
             icon={Icon1}
@@ -229,13 +206,15 @@ export default function Projects() {
             minHeight: 560,
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
-          }}>
+          }}
+        >
           <Flex vertical gap="large">
             <Flex
               justify="space-between"
               align="center"
               gap="large"
-              className="pb-4">
+              className="pb-4"
+            >
               <div className="flex items-center">
                 <Search placeholder="Search" style={{ width: 331 }} />
               </div>
@@ -243,7 +222,8 @@ export default function Projects() {
                 <Button
                   type="primary"
                   className="text-[12px]"
-                  onClick={() => navigate('/new-project')}>
+                  onClick={() => navigate("/new-project")}
+                >
                   <Space>Add Project</Space>
                 </Button>
               </div>
@@ -264,6 +244,11 @@ export default function Projects() {
           </Flex>
         </div>
       </div>
+      <DeleteProjectModal
+        open={openDelete}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      />
     </>
   );
 }
