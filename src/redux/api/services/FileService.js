@@ -16,6 +16,14 @@ const injectedUserApi = api.injectEndpoints({
         body: req,
       }),
     }),
+    getTransferedFiles: builder.mutation({
+      query: (req) => ({
+        url: `/file/transfered`,
+        method: 'POST',
+        body: req,
+      }),
+    }),
+
     transferFile: builder.mutation({
       query: (req) => ({
         url: `/file/transfer`,
@@ -37,6 +45,13 @@ const injectedUserApi = api.injectEndpoints({
         body: req,
       }),
     }),
+    deleteFile: builder.mutation({
+      query: (req) => ({
+        url: `/file/delete`,
+        method: 'POST',
+        body: req,
+      }),
+    }),
   }),
 });
 
@@ -46,4 +61,6 @@ export const {
   useTransferFileMutation,
   useGetPendingFilesMutation,
   useEditFileMutation,
+  useGetTransferedFilesMutation,
+  useDeleteFileMutation,
 } = injectedUserApi;

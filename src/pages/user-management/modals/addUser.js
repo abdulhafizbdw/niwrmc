@@ -281,7 +281,7 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel, refetch }) => {
                   options={[
                     { value: 'user', label: 'User' },
                     { value: 'admin', label: 'Admin' },
-                    { value: 'super_admin', label: 'Super Administrator' },
+                    // { value: 'super_admin', label: 'Super Administrator' },
                   ]}
                 />
               </Form.Item>

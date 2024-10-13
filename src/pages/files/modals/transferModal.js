@@ -13,6 +13,7 @@ import { ArrowRightOutlined } from '@ant-design/icons';
 import { useGetDepartmentsQuery } from '../../../redux/api/services/DepartmentService';
 import { useTransferFileMutation } from '../../../redux/api/services/FileService';
 import ConfirmTransferModal from './confirmTransfer';
+import { useSelector } from 'react-redux';
 
 const TransferModal = ({
   open,
@@ -27,7 +28,7 @@ const TransferModal = ({
   const [tranferTo, setTransferTo] = useState(undefined);
   const { data } = useGetDepartmentsQuery();
   const [transferFile, { isLoading }] = useTransferFileMutation();
-
+  const myDepartments = useSelector((data) => data.user.department);
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
 
   const handleOk = () => {
@@ -43,8 +44,10 @@ const TransferModal = ({
         label: dp.name,
         value: dp._id,
       }));
-
-      setDepartments(newData);
+      const result = newData.filter(
+        (item) => !myDepartments.includes(item.value)
+      );
+      setDepartments(result);
     }
   }, [data]);
   const handleTransfer = async () => {

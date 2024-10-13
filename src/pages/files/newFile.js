@@ -68,6 +68,7 @@ export default function NewFile() {
     onSubmit: async (values) => {
       const bodyData = {
         ...values,
+        createdBy: email,
         comments: [
           {
             message: values.comments,
@@ -245,7 +246,8 @@ export default function NewFile() {
                                 `${file.name} uploaded successfully.`
                               );
                               const updatedUploads = [...uploads];
-                              updatedUploads[ind].url = data.url;
+
+                              updatedUploads[ind].url = data.secure_url;
                             }
                           })
                           .catch((error) => {

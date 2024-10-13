@@ -22,15 +22,28 @@ import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentProject } from '../../redux/slices/currentProjectSlice';
 import DeleteProjectModal from './modals/deleteProject';
-
+import debounce from 'lodash.debounce';
 export default function Projects() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [totalPages, setTotalPages] = useState(0);
+  const [allTotal, setAllTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchValue, setSearcherValue] = useState('');
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState('');
+  const [refresh, setRefresh] = useState(0);
   const [getFolder, { isLoading }] = useGetFolderByDepartmentsMutation();
   const [allProject, setAllProject] = useState([]);
   const [allCompletedProject, setAllCompletedProject] = useState([]);
   const department = useSelector((data) => data.user.department);
   const [openDelete, setOpenDelete] = useState(false);
+  const [foldderId, setFolderId] = useState('');
+  const [folderName, setFolderName] = useState('');
+  const email = useSelector((data) => data.user.email);
+  const role = useSelector((data) => data.user.role);
+  const handleSearch = debounce((value) => {
+    setDebouncedSearchValue(value);
+  }, 3000);
   const handleOk = () => {
     setTimeout(() => {
       setOpenDelete(false);
@@ -42,9 +55,14 @@ export default function Projects() {
     setOpenDelete(false);
   };
   const gtMyFiles = async () => {
-    const allFiles = await getFolder({ departments: department });
+    const allFiles = await getFolder({
+      departments: department,
+      page: currentPage,
+      search: debouncedSearchValue,
+    });
 
     if (allFiles.data) {
+      setAllTotal(allFiles.data.pagination.total);
       const editedData = [];
       const pendingFiles = [];
       const completedProjects = [];
@@ -109,15 +127,6 @@ export default function Projects() {
           },
         }),
     },
-    {
-      key: '3',
-      label: 'Delete',
-      danger: true,
-      icon: <DeleteOutlined />,
-      onClick: () => {
-        setOpenDelete(true);
-      },
-    },
   ];
 
   const columns = [
@@ -158,12 +167,25 @@ export default function Projects() {
       render: (_, record) => (
         <Space
           onClick={() => {
+            setFolderId(record._id);
+            setFolderName(record.title);
             dispatch(setCurrentProject(record));
           }}
           size="middle">
           <Dropdown
             menu={{
-              items,
+              items: [
+                ...items,
+                (role == 'admin' || email == record?.createdBy) && {
+                  key: '3',
+                  label: 'Delete',
+                  danger: true,
+                  icon: <DeleteOutlined />,
+                  onClick: () => {
+                    setOpenDelete(true);
+                  },
+                },
+              ],
             }}>
             <MoreOutlined />
           </Dropdown>
@@ -176,7 +198,7 @@ export default function Projects() {
     if (department) {
       gtMyFiles();
     }
-  }, []);
+  }, [currentPage, debouncedSearchValue, refresh]);
   return (
     <>
       {isLoading && <Skeleton className="w-full" loading active />}
@@ -220,7 +242,16 @@ export default function Projects() {
               gap="large"
               className="pb-4">
               <div className="flex items-center">
-                <Search placeholder="Search" style={{ width: 331 }} />
+                <Search
+                  autoFocus={searchValue ? true : false}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setSearcherValue(value);
+                    handleSearch(value);
+                  }}
+                  placeholder="Search"
+                  style={{ width: 331 }}
+                />
               </div>
               <div>
                 <Button
@@ -237,9 +268,18 @@ export default function Projects() {
               {!isLoading && (
                 <>
                   <Table
+                    pagination={{
+                      pageSize: 10,
+
+                      total: allTotal,
+                      current: currentPage,
+                    }}
                     columns={columns}
                     dataSource={allProject}
                     bordered={true}
+                    onChange={(pagination) => {
+                      setCurrentPage(pagination.current);
+                    }}
                   />
                 </>
               )}
@@ -248,6 +288,9 @@ export default function Projects() {
         </div>
       </div>
       <DeleteProjectModal
+        folderId={foldderId}
+        folderName={folderName}
+        refresh={() => setRefresh((prev) => prev + 1)}
         open={openDelete}
         onOk={handleOk}
         onCancel={handleCancel}

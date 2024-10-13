@@ -96,6 +96,7 @@ export default function NewProject() {
       }
       const bodyData = {
         ...values,
+        createdBy: email,
         comments: [
           {
             message: values.comments,
@@ -348,7 +349,7 @@ export default function NewProject() {
                                 `${file.name} uploaded successfully.`
                               );
                               const updatedUploads = [...uploads];
-                              updatedUploads[ind].url = data.url;
+                              updatedUploads[ind].url = data.secure_url;
                             }
                           })
                           .catch((error) => {

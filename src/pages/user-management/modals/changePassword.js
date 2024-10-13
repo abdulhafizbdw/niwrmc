@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Modal,
@@ -9,9 +9,10 @@ import {
   Divider,
   notification,
   Form,
-} from "antd";
-import { useGetDepartmentsQuery } from "../../../redux/api/services/DepartmentService";
-import { useTransferFileMutation } from "../../../redux/api/services/FileService";
+} from 'antd';
+import { useGetDepartmentsQuery } from '../../../redux/api/services/DepartmentService';
+import { useTransferFileMutation } from '../../../redux/api/services/FileService';
+import { useChangePasswordMutation } from '../../../redux/api/services/AuthService';
 
 const ChangePasswordModal = ({
   open,
@@ -21,12 +22,14 @@ const ChangePasswordModal = ({
   fileId,
   reload,
   fileName,
+  email,
 }) => {
   const [departmentList, setDepartments] = useState([]);
   const [tranferTo, setTransferTo] = useState(undefined);
   const { data } = useGetDepartmentsQuery();
-  const [transferFile, { isLoading }] = useTransferFileMutation();
-
+  const [transferFile] = useTransferFileMutation();
+  const [changePass, { isLoading }] = useChangePasswordMutation();
+  const [password, setPassord] = useState('');
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
 
   const handleOk = () => {
@@ -49,7 +52,7 @@ const ChangePasswordModal = ({
   const handleTransfer = async () => {
     if (!tranferTo) {
       notification.error({
-        message: "Please select department to transfer to",
+        message: 'Please select department to transfer to',
       });
     }
     setOpenConfirmModal(true);
@@ -72,7 +75,7 @@ const ChangePasswordModal = ({
         onCancel();
       }
     } catch (error) {
-      notification.error("Something went wrong");
+      notification.error('Something went wrong');
     }
   };
   return (
@@ -90,29 +93,44 @@ const ChangePasswordModal = ({
             <CancelBtn />
             <Button
               loading={isLoading}
-              onClick={() => setOpenConfirmModal(true)}
+              onClick={async () => {
+                if (password.length < 8) {
+                  notification.error({
+                    message: 'Password must be at least 8 characters',
+                  });
+                  return;
+                }
+                const changed = await changePass({
+                  email,
+                  newPassword: password,
+                });
+                if (changed.data) {
+                  notification.success({
+                    message: `Password chaged successfully`,
+                  });
+
+                  reload();
+                  onCancel();
+                }
+              }}
               // onClick={() => setOpenConfirmModal(true)}
               type="primary"
-              style={{ backgroundColor: "#cc7a30" }}
-            >
+              style={{ backgroundColor: '#cc7a30' }}>
               Change and save password
             </Button>
           </>
-        )}
-      >
-        <Divider style={{ marginTop: "2px", marginBottom: "35px" }} />
+        )}>
+        <Divider style={{ marginTop: '2px', marginBottom: '35px' }} />
 
         <Row
           gutter={{ xs: 8, sm: 16, md: 18 }}
-          style={{ marginBottom: "25px" }}
-        >
+          style={{ marginBottom: '25px' }}>
           <Col
             span={20}
             offset={2}
-            style={{ fontSize: "16px", textAlign: "center" }}
-          >
+            style={{ fontSize: '16px', textAlign: 'center' }}>
             <span>
-              You are about to change password for this user {"{username}"}
+              You are about to change password for this user ({email})
             </span>
           </Col>
         </Row>
@@ -128,9 +146,10 @@ const ChangePasswordModal = ({
                     required: true,
                   },
                 ]}
-                style={{ marginBottom: "0" }}
-              >
+                style={{ marginBottom: '0' }}>
                 <Input
+                  onChange={(e) => setPassord(e.target.value)}
+                  value={password}
                   name="password"
                   className="h-[38px] w-[100%] mb-3"
                   variant="outlined"
@@ -141,8 +160,8 @@ const ChangePasswordModal = ({
           </Col>
         </Row>
 
-        <Row style={{ margin: "30px 0" }}>
-          <Col />{" "}
+        <Row style={{ margin: '30px 0' }}>
+          <Col />{' '}
         </Row>
       </Modal>
     </>
