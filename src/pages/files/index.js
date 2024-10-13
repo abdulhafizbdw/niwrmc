@@ -9,6 +9,8 @@ import {
   Tabs,
   theme,
   Skeleton,
+  Row,
+  Tag,
 } from 'antd';
 import {
   MoreOutlined,
@@ -29,22 +31,36 @@ import { useNavigate } from 'react-router-dom';
 import {
   useGetFileByDepartmentsMutation,
   useGetPendingFilesMutation,
+  useGetTransferedFilesMutation,
 } from '../../redux/api/services/FileService';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentFile } from '../../redux/slices/currentFileSlice';
 import DeleteFileModal from './modals/deleteFile';
+import debounce from 'lodash.debounce';
+import { setLastFile } from '../../redux/slices/userSlice';
 
 export default function Files() {
   const navigate = useNavigate();
   const [refresh, setRefresh] = useState(0);
   const department = useSelector((data) => data.user.department);
+  const [totalPages, setTotalPages] = useState(0);
+  const [allTotal, setAllTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchValue, setSearcherValue] = useState('');
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState('');
   const [fileId, setFileId] = useState('');
   const [fileName, setFileName] = useState('');
   const [allFiles, setAllFiles] = useState([]);
   const [pendingFiles, setAllPendingFiles] = useState([]);
   const [transferedFiles, setAllTransferedFiles] = useState([]);
   const [openDelete, setOpenDelete] = useState(false);
+  const email = useSelector((data) => data.user.email);
+  const handleSearch = debounce((value) => {
+    setDebouncedSearchValue(value);
+  }, 3000);
   const [getFiles, { isLoading }] = useGetFileByDepartmentsMutation();
+  const [getTransferedFiles, { isLoading: getting }] =
+    useGetTransferedFilesMutation();
   const dispatch = useDispatch();
   const [getPendingFiles, { isLoading: isGetting }] =
     useGetPendingFilesMutation();
@@ -57,7 +73,8 @@ export default function Files() {
   const [mapPrivilege, setMapPrivilege] = useState(false);
   const [editPermission, setEditPermission] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-
+  const role = useSelector((data) => data.user.role);
+  const lastFile = useSelector((data) => data.user.lastFile);
   const handleOk = () => {
     setConfirmLoading(true);
     setTimeout(() => {
@@ -104,15 +121,6 @@ export default function Files() {
         setOpen(true);
       },
     },
-    {
-      key: '4',
-      label: 'Delete',
-      danger: true,
-      icon: <DeleteOutlined />,
-      onClick: () => {
-        setOpenDelete(true);
-      },
-    },
   ];
 
   const columns = [
@@ -120,6 +128,15 @@ export default function Files() {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
+      render: (_, record, i) => {
+        const currentNewfiles = allTotal + transferedFiles.length - lastFile;
+        return (
+          <Row onClick={() => console.log(lastFile)} size="middle">
+            <p className="mr-[3px]">{record.title}</p>
+            {i + 1 <= currentNewfiles && <Tag color="red">New</Tag>}
+          </Row>
+        );
+      },
     },
     {
       title: 'Type',
@@ -155,7 +172,18 @@ export default function Files() {
           size="middle">
           <Dropdown
             menu={{
-              items,
+              items: [
+                ...items,
+                (role == 'admin' || email == record?.createdBy) && {
+                  key: '4',
+                  label: 'Delete',
+                  danger: true,
+                  icon: <DeleteOutlined />,
+                  onClick: () => {
+                    setOpenDelete(true);
+                  },
+                },
+              ],
             }}>
             <MoreOutlined />
           </Dropdown>
@@ -199,8 +227,14 @@ export default function Files() {
       title: 'Action',
       key: 'action',
       dataIndex: 'action',
-      render: () => (
-        <Space size="middle">
+      render: (_, record) => (
+        <Space
+          onClick={() => {
+            setFileId(record._id);
+            setFileName(record.title);
+            dispatch(setCurrentFile(record));
+          }}
+          size="middle">
           <Dropdown
             menu={{
               items,
@@ -212,12 +246,22 @@ export default function Files() {
     },
   ];
   const gtMyFiles = async () => {
-    const allFiles = await getFiles({ departments: department });
-    const allpendingFiles = await getPendingFiles({ ids: department });
+    const allFiles = await getFiles({
+      departments: department,
+      page: currentPage,
+      search: debouncedSearchValue,
+    });
+
     if (allFiles.data) {
+      setTotalPages(allFiles.data.pagination.totalPages);
+      setAllTotal(allFiles.data.pagination.total);
+      setTimeout(() => {
+        dispatch(
+          setLastFile(allFiles.data.pagination.total + transferedFiles.length)
+        );
+      }, 1000 * 60);
       const editedData = [];
-      const pendingFiles = [];
-      const transferedFiles = [];
+
       allFiles.data.data.map((item) => {
         editedData.push({
           ...item,
@@ -225,30 +269,41 @@ export default function Files() {
           origin: item.originalDepartment.name,
           date: moment(item.creation_date).format('YYYY-MM-DD'),
         });
-
-        if (item.transferedTo) {
-          transferedFiles.push({
-            ...item,
-            items: item.uploads.length,
-            origin: item.originalDepartment.name,
-            transferdept: item.transferedTo.name,
-            date: moment(item.creation_date).format('YYYY-MM-DD'),
-          });
-        }
       });
 
-      if (allpendingFiles.data) {
-        allpendingFiles.data.data.map((item) => {
-          pendingFiles.push({
-            ...item,
-            items: item.uploads.length,
-            origin: item.originalDepartment.name,
-            date: moment(item.creation_date).format('YYYY-MM-DD'),
-          });
-        });
-      }
-      setAllPendingFiles(pendingFiles);
       setAllFiles(editedData);
+    }
+  };
+  const getAllPendingFiles = async () => {
+    const allpendingFiles = await getPendingFiles({ ids: department });
+    if (allpendingFiles.data) {
+      const pendingFiles = [];
+      allpendingFiles.data.data.map((item) => {
+        pendingFiles.push({
+          ...item,
+          items: item.uploads.length,
+          origin: item.originalDepartment.name,
+          date: moment(item.creation_date).format('YYYY-MM-DD'),
+        });
+      });
+    }
+    setAllPendingFiles(pendingFiles);
+  };
+  const handlegetTransferedFiles = async () => {
+    const allFiles = await getTransferedFiles({ departments: department });
+
+    if (allFiles.data) {
+      const transferedFiles = [];
+      allFiles.data.data.map((item) => {
+        transferedFiles.push({
+          ...item,
+          items: item.uploads.length,
+          origin: item.originalDepartment.name,
+          transferdept: item.transferedTo.name,
+          date: moment(item.creation_date).format('YYYY-MM-DD'),
+        });
+      });
+
       setAllTransferedFiles(transferedFiles);
     }
   };
@@ -258,9 +313,17 @@ export default function Files() {
   };
   useEffect(() => {
     if (department) {
-      gtMyFiles();
+      handlegetTransferedFiles();
+      getAllPendingFiles();
     }
   }, [refresh]);
+
+  useEffect(() => {
+    if (department) {
+      gtMyFiles();
+    }
+  }, [refresh, currentPage, debouncedSearchValue]);
+
   const files = (
     <div
       style={{
@@ -276,7 +339,17 @@ export default function Files() {
           gap="large"
           className="pb-4">
           <div className="flex items-center">
-            <Search placeholder="Search" style={{ width: 331 }} />
+            <Search
+              autoFocus={searchValue ? true : false}
+              value={searchValue}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSearcherValue(value);
+                handleSearch(value);
+              }}
+              placeholder="Search"
+              style={{ width: 331 }}
+            />
           </div>
           <div>
             <Button
@@ -289,7 +362,20 @@ export default function Files() {
         </Flex>
 
         <div>
-          <Table columns={columns} dataSource={allFiles} bordered={true} />
+          <Table
+            pagination={{
+              pageSize: 10,
+
+              total: allTotal,
+              current: currentPage,
+            }}
+            columns={columns}
+            dataSource={allFiles}
+            bordered={true}
+            onChange={(pagination) => {
+              setCurrentPage(pagination.current);
+            }}
+          />
         </div>
       </Flex>
     </div>
@@ -317,6 +403,7 @@ export default function Files() {
         <div>
           <Table
             columns={transfercolumns}
+            pagination={false}
             dataSource={transferedFiles}
             bordered={true}
           />
@@ -353,7 +440,12 @@ export default function Files() {
         </Flex>
 
         <div>
-          <Table columns={columns} dataSource={pendingFiles} bordered={true} />
+          <Table
+            pagination={false}
+            columns={columns}
+            dataSource={pendingFiles}
+            bordered={true}
+          />
         </div>
       </Flex>
     </div>
@@ -391,7 +483,7 @@ export default function Files() {
               title="Total Files"
               icon={Icon1}
               iconBG="[#55A51C]"
-              number={allFiles.length}
+              number={allTotal + transferedFiles.length}
             />
             <TileCard
               title="Transferred"
@@ -426,6 +518,9 @@ export default function Files() {
         )}
       </div>
       <DeleteFileModal
+        fileId={fileId}
+        fileName={fileName}
+        refresh={() => setRefresh((prev) => prev + 1)}
         open={openDelete}
         onOk={handleOk}
         confirmLoading={confirmLoading}

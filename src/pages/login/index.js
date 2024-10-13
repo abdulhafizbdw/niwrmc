@@ -13,7 +13,12 @@ import logo from '../../assets/logo-niwrmc.svg';
 import { useNavigate } from 'react-router-dom';
 import { useLoginAccountMutation } from '../../redux/api/services/AuthService';
 import { useDispatch } from 'react-redux';
-import { setDepartment, setUserMail } from '../../redux/slices/userSlice';
+import {
+  setDepartment,
+  setFullName,
+  setRole,
+  setUserMail,
+} from '../../redux/slices/userSlice';
 const validationSchema = Yup.object({
   email: Yup.string()
     .email('Invalid email format')
@@ -42,6 +47,12 @@ export default function Login() {
           navigate('/files');
           dispatch(setUserMail(values.email));
           dispatch(setDepartment(loggedIn.data.user.department));
+          dispatch(
+            setFullName(
+              `${loggedIn.data.user.firstName} ${loggedIn.data.user.lastName}`
+            )
+          );
+          dispatch(setRole(loggedIn.data.user.role[0]));
         }
       } catch (error) {
         notification.error('Something went wrong');

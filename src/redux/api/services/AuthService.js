@@ -17,8 +17,30 @@ const injectedUserApi = api.injectEndpoints({
       }),
     }),
     getUsers: builder.query({
-      query: () => ({
-        url: `/all_users`,
+      query: (currentPage) => ({
+        url: `/all_users?page=${currentPage}`,
+      }),
+    }),
+
+    editUser: builder.mutation({
+      query: (req) => ({
+        url: `/user/edit`,
+        method: 'POST',
+        body: req,
+      }),
+    }),
+    deleteUser: builder.mutation({
+      query: (req) => ({
+        url: `/user/delete`,
+        method: 'POST',
+        body: req,
+      }),
+    }),
+    changePassword: builder.mutation({
+      query: (req) => ({
+        url: `/user/change`,
+        method: 'POST',
+        body: req,
       }),
     }),
   }),
@@ -28,4 +50,7 @@ export const {
   useCreateAccountMutation,
   useLoginAccountMutation,
   useGetUsersQuery,
+  useEditUserMutation,
+  useDeleteUserMutation,
+  useChangePasswordMutation,
 } = injectedUserApi;

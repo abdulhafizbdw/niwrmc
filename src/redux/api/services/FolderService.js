@@ -24,6 +24,13 @@ const injectedUserApi = api.injectEndpoints({
         body: req,
       }),
     }),
+    deleteFolder: builder.mutation({
+      query: (req) => ({
+        url: `/folder/delete`,
+        method: 'POST',
+        body: req,
+      }),
+    }),
   }),
 });
 
@@ -31,4 +38,5 @@ export const {
   useCreateFolderMutation,
   useGetFolderByDepartmentsMutation,
   useEditFolderMutation,
+  useDeleteFolderMutation,
 } = injectedUserApi;

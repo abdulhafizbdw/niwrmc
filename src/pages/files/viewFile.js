@@ -369,7 +369,7 @@ export default function ViewFile() {
                                 `${file.name} uploaded successfully.`
                               );
                               const updatedUploads = [...newUpload];
-                              updatedUploads[ind].url = data.url;
+                              updatedUploads[ind].url = data.secure_url;
                               setUploads(updatedUploads);
                             }
                           })

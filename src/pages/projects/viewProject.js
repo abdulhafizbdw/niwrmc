@@ -145,13 +145,14 @@ export default function ViewProject() {
     }
   };
   const { handleChange, handleSubmit } = formik;
-  const totalPercentage = [...milestone].reduce(
+  const totalPercentage = [...formik.values.milestone].reduce(
     (acc, curr) => acc + curr.percentage,
     0
   );
 
   // Calculate the percentage in relation to 100%
-  const currentPercentage = (totalPercentage / milestone.length / 100) * 100;
+  const currentPercentage =
+    (totalPercentage / formik.values.milestone.length / 100) * 100;
 
   const handleMilestoneChange = (index, event) => {
     const { value } = event.target;
@@ -350,7 +351,7 @@ export default function ViewProject() {
                     onChange={(e) =>
                       formik.setFieldValue(
                         `milestone[${ind}].percentage`,
-                        e.target.value
+                        Number(e.target.value)
                       )
                     }
                   />
@@ -511,7 +512,7 @@ export default function ViewProject() {
                                 `${file.name} uploaded successfully.`
                               );
                               const updatedUploads = [...newUpload];
-                              updatedUploads[ind].url = data.url;
+                              updatedUploads[ind].url = data.secure_url;
                               setUploads(updatedUploads);
                             }
                           })

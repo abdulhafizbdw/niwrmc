@@ -1,9 +1,11 @@
-import { Navigate } from "react-router-dom";
-import auth from "../pages/authentication";
-import DashboardLayout from "../components/Layout";
+import { Navigate } from 'react-router-dom';
+
+import DashboardLayout from '../components/Layout';
+import { useSelector } from 'react-redux';
 
 const PrivateRoute = ({ children }) => {
-  return auth.isUser ? <DashboardLayout /> : <Navigate to="/login" />;
+  const role = useSelector((data) => data.user.role);
+  return role ? <DashboardLayout /> : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;

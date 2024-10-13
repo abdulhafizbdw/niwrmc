@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Input,
@@ -9,19 +9,22 @@ import {
   Tag,
   theme,
   Skeleton,
-} from "antd";
-import { UserOutlined, MoreOutlined, DeleteOutlined } from "@ant-design/icons";
-import AddUserModal from "./modals/addUser";
-import EditUserModal from "./modals/editUser";
-import ChangePasswordModal from "./modals/changePassword";
-import DeleteUserModal from "./modals/deleteUser";
+} from 'antd';
+import { UserOutlined, MoreOutlined, DeleteOutlined } from '@ant-design/icons';
+import AddUserModal from './modals/addUser';
+import EditUserModal from './modals/editUser';
+import ChangePasswordModal from './modals/changePassword';
+import DeleteUserModal from './modals/deleteUser';
 
-import { useNavigate } from "react-router-dom";
-import { useGetUsersQuery } from "../../redux/api/services/AuthService";
-import { icons } from "antd/es/image/PreviewGroup";
+import { useNavigate } from 'react-router-dom';
+import { useGetUsersQuery } from '../../redux/api/services/AuthService';
+import { icons } from 'antd/es/image/PreviewGroup';
 
 export default function UserManagement() {
   const navigate = useNavigate();
+  const [currenPage, setCurrentPage] = useState(1);
+  const [allTotal, setAllTotal] = useState(0);
+  const [currentUser, setCurrentUser] = useState(undefined);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -32,10 +35,11 @@ export default function UserManagement() {
     isLoading,
     isFetching,
     refetch,
-  } = useGetUsersQuery();
+  } = useGetUsersQuery(currenPage);
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openPassword, setOpenPassword] = useState(false);
+  const [currentDepartment, setCurrentDepartment] = useState([]);
   const [openDelete, setOpenDelete] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
@@ -50,7 +54,7 @@ export default function UserManagement() {
     }, 2000);
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
+    console.log('Clicked cancel button');
     setOpen(false);
     setOpenEdit(false);
     setOpenPassword(false);
@@ -59,13 +63,14 @@ export default function UserManagement() {
   const handleGetUsers = async () => {
     if (users) {
       const refactored = [];
-      console.log(users.data);
+
+      setAllTotal(users.pagination.total);
       users.data.map((user, ind) => {
         refactored.push({
           name: `${user.firstName} ${user.lastName}`,
           email: user.email,
           status: user.isActive,
-          department: "",
+          department: '',
           role: user.role.map((role) => `${role} 👥 `),
           key: ind,
           department: user.departmentsData?.map(
@@ -79,22 +84,22 @@ export default function UserManagement() {
 
   const items = [
     {
-      key: "1",
-      label: "Edit",
+      key: '1',
+      label: 'Edit',
       onClick: () => {
         setOpenEdit(true);
       },
     },
     {
-      key: "2",
-      label: "Change Password",
+      key: '2',
+      label: 'Change Password',
       onClick: () => {
         setOpenPassword(true);
       },
     },
     {
-      key: "3",
-      label: "Delete",
+      key: '3',
+      label: 'Delete',
       danger: true,
       icon: <DeleteOutlined />,
       onClick: () => {
@@ -108,49 +113,53 @@ export default function UserManagement() {
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "User Email",
-      dataIndex: "email",
-      key: "email",
+      title: 'User Email',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
-      title: "Role",
-      dataIndex: "role",
-      key: "role",
+      title: 'Role',
+      dataIndex: 'role',
+      key: 'role',
     },
     {
-      title: "Department",
-      dataIndex: "department",
-      key: "department",
+      title: 'Department',
+      dataIndex: 'department',
+      key: 'department',
     },
     {
-      title: "Status",
-      key: "status",
-      dataIndex: "status",
+      title: 'Status',
+      key: 'status',
+      dataIndex: 'status',
       render: (status) => (
         <span>
-          <Tag color={status === true ? "green" : "red"} key={status}>
-            {status ? "ACTIVE" : "INACTIVE"}
+          <Tag color={status === true ? 'green' : 'red'} key={status}>
+            {status ? 'ACTIVE' : 'INACTIVE'}
           </Tag>
         </span>
       ),
     },
     {
-      title: "Action",
-      key: "action",
-      dataIndex: "action",
-      render: () => (
-        <Space size="middle">
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
+      render: (ind, user, i) => (
+        <Space
+          onClick={() => {
+            setCurrentDepartment(users.data[i].department);
+            setCurrentUser(users.data[i]);
+          }}
+          size="middle">
           <Dropdown
             menu={{
               items,
-            }}
-          >
+            }}>
             <MoreOutlined />
           </Dropdown>
         </Space>
@@ -166,8 +175,7 @@ export default function UserManagement() {
           minHeight: 560,
           background: colorBgContainer,
           borderRadius: borderRadiusLG,
-        }}
-      >
+        }}>
         <Flex vertical gap="large">
           {(isLoading || isFetching) && (
             <Skeleton className="w-full" loading active />
@@ -179,8 +187,7 @@ export default function UserManagement() {
                   <Button
                     type="primary"
                     className="bg-PrimaryColor text-[12px]"
-                    onClick={() => setOpen(true)}
-                  >
+                    onClick={() => setOpen(true)}>
                     <Space>Create User</Space>
                   </Button>
                 </div>
@@ -188,6 +195,15 @@ export default function UserManagement() {
 
               <div>
                 <Table
+                  onChange={(pagination) => {
+                    setCurrentPage(pagination.current);
+                  }}
+                  pagination={{
+                    pageSize: 10,
+
+                    total: allTotal,
+                    current: currenPage,
+                  }}
                   columns={columns}
                   dataSource={allUsers}
                   bordered={true}
@@ -204,19 +220,27 @@ export default function UserManagement() {
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
       />
+
       <EditUserModal
+        refetch={refetch}
+        currentDepartment={currentDepartment}
+        currentUser={currentUser}
         open={openEdit}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
       />
       <ChangePasswordModal
+        reload={refetch}
+        email={currentUser?.email}
         open={openPassword}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
       />
       <DeleteUserModal
+        reload={refetch}
+        email={currentUser?.email}
         open={openDelete}
         onOk={handleOk}
         confirmLoading={confirmLoading}
