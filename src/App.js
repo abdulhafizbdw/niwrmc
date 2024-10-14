@@ -11,6 +11,7 @@ import ViewFile from "./pages/files/viewFile.js";
 import Projects from "./pages/projects/index.js";
 import NewProject from "./pages/projects/newProject.js";
 import ViewProject from "./pages/projects/viewProject.js";
+import Profile from "./pages/profile/index.js";
 import UserManagement from "./pages/user-management/index.js";
 import { Provider } from "react-redux";
 import store, { persistor } from "./redux/index.js";
@@ -46,6 +47,7 @@ function App() {
                   <Route exact path="projects" element={<Projects />} />
                   <Route exact path="new-project" element={<NewProject />} />
                   <Route exact path="view-project" element={<ViewProject />} />
+                  <Route exact path="profile" element={<Profile />} />
                   <Route exact path="users" element={<UserManagement />} />
                 </Route>
               </Routes>

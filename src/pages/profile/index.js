@@ -7,21 +7,18 @@ import {
   Space,
   Table,
   Tag,
-  Select,
   theme,
   Skeleton,
 } from "antd";
 import { UserOutlined, MoreOutlined, DeleteOutlined } from "@ant-design/icons";
-import AddUserModal from "./modals/addUser";
-import EditUserModal from "./modals/editUser";
+import EditProfileModal from "./modals/editProfile";
 import ChangePasswordModal from "./modals/changePassword";
-import DeleteUserModal from "./modals/deleteUser";
 
 import { useNavigate } from "react-router-dom";
 import { useGetUsersQuery } from "../../redux/api/services/AuthService";
 import { icons } from "antd/es/image/PreviewGroup";
 
-export default function UserManagement() {
+export default function Profile() {
   const navigate = useNavigate();
   const [currenPage, setCurrentPage] = useState(1);
   const [allTotal, setAllTotal] = useState(0);
@@ -44,7 +41,6 @@ export default function UserManagement() {
   const [openDelete, setOpenDelete] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
-  const [searchValue, setSearcherValue] = useState("");
   const handleOk = () => {
     setConfirmLoading(true);
     setTimeout(() => {
@@ -97,15 +93,6 @@ export default function UserManagement() {
       label: "Change Password",
       onClick: () => {
         setOpenPassword(true);
-      },
-    },
-    {
-      key: "3",
-      label: "Delete",
-      danger: true,
-      icon: <DeleteOutlined />,
-      onClick: () => {
-        setOpenDelete(true);
       },
     },
   ];
@@ -187,54 +174,14 @@ export default function UserManagement() {
           )}
           {!(isLoading || isFetching) && (
             <>
-              <Flex
-                justify="space-between"
-                align="center"
-                gap="large"
-                className="pb-4"
-              >
-                <div className="flex items-center">
-                  <Space size="middle">
-                    <Search
-                      autoFocus={searchValue ? true : false}
-                      placeholder="Search"
-                      style={{ width: 331 }}
-                    />
-                    <Space>
-                      <span>Department:</span>
-                      <Select className="w-[250px]" />
-                    </Space>
-                    <Space>
-                      <span>Role:</span>
-                      <Select
-                        className="w-[100px]"
-                        options={[
-                          { value: "all", label: "All" },
-                          { value: "user", label: "User" },
-                          { value: "admin", label: "Admin" },
-                        ]}
-                      />
-                    </Space>
-                    <Space>
-                      <span>Status:</span>
-                      <Select
-                        className="w-[100px]"
-                        options={[
-                          { value: "all", label: "All" },
-                          { value: "active", label: "Active" },
-                          { value: "inactive", label: "Inactive" },
-                        ]}
-                      />
-                    </Space>
-                  </Space>
-                </div>
+              <Flex justify="end" align="center" gap="large" className="pb-4">
                 <div>
                   <Button
                     type="primary"
                     className="bg-PrimaryColor text-[12px]"
-                    onClick={() => setOpen(true)}
+                    onClick={() => setOpenEdit(true)}
                   >
-                    <Space>Create User</Space>
+                    <Space>Edit Details</Space>
                   </Button>
                 </div>
               </Flex>
@@ -259,15 +206,7 @@ export default function UserManagement() {
           )}
         </Flex>
       </div>
-      <AddUserModal
-        refetch={refetch}
-        open={open}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-      />
-
-      <EditUserModal
+      <EditProfileModal
         refetch={refetch}
         currentDepartment={currentDepartment}
         currentUser={currentUser}
@@ -280,14 +219,6 @@ export default function UserManagement() {
         reload={refetch}
         email={currentUser?.email}
         open={openPassword}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-      />
-      <DeleteUserModal
-        reload={refetch}
-        email={currentUser?.email}
-        open={openDelete}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
