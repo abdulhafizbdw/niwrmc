@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Input,
@@ -7,38 +7,39 @@ import {
   Space,
   Table,
   Tabs,
+  Select,
   theme,
   Skeleton,
-} from 'antd';
-import { MoreOutlined, DeleteOutlined } from '@ant-design/icons';
-import TileCard from '../../components/Cards/TileCard';
-import Icon1 from '../../assets/foldericon.svg';
-import Icon2 from '../../assets/completeicon.svg';
-import Icon3 from '../../assets/awaitingicon.svg';
+} from "antd";
+import { MoreOutlined, DeleteOutlined } from "@ant-design/icons";
+import TileCard from "../../components/Cards/TileCard";
+import Icon1 from "../../assets/foldericon.svg";
+import Icon2 from "../../assets/completeicon.svg";
+import Icon3 from "../../assets/awaitingicon.svg";
 
-import { useNavigate } from 'react-router-dom';
-import { useGetFolderByDepartmentsMutation } from '../../redux/api/services/FolderService';
-import moment from 'moment';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentProject } from '../../redux/slices/currentProjectSlice';
-import DeleteProjectModal from './modals/deleteProject';
-import debounce from 'lodash.debounce';
+import { useNavigate } from "react-router-dom";
+import { useGetFolderByDepartmentsMutation } from "../../redux/api/services/FolderService";
+import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentProject } from "../../redux/slices/currentProjectSlice";
+import DeleteProjectModal from "./modals/deleteProject";
+import debounce from "lodash.debounce";
 export default function Projects() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [totalPages, setTotalPages] = useState(0);
   const [allTotal, setAllTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchValue, setSearcherValue] = useState('');
-  const [debouncedSearchValue, setDebouncedSearchValue] = useState('');
+  const [searchValue, setSearcherValue] = useState("");
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
   const [refresh, setRefresh] = useState(0);
   const [getFolder, { isLoading }] = useGetFolderByDepartmentsMutation();
   const [allProject, setAllProject] = useState([]);
   const [allCompletedProject, setAllCompletedProject] = useState([]);
   const department = useSelector((data) => data.user.department);
   const [openDelete, setOpenDelete] = useState(false);
-  const [foldderId, setFolderId] = useState('');
-  const [folderName, setFolderName] = useState('');
+  const [foldderId, setFolderId] = useState("");
+  const [folderName, setFolderName] = useState("");
   const email = useSelector((data) => data.user.email);
   const role = useSelector((data) => data.user.role);
   const handleSearch = debounce((value) => {
@@ -50,7 +51,7 @@ export default function Projects() {
     }, 2000);
   };
   const handleCancel = () => {
-    console.log('Clicked cancel button');
+    console.log("Clicked cancel button");
 
     setOpenDelete(false);
   };
@@ -78,8 +79,8 @@ export default function Projects() {
 
         editedData.push({
           ...item,
-          startDate: moment(item.startDate).format('YYYY-MM-DD'),
-          endDate: moment(item.endDate).format('YYYY-MM-DD'),
+          startDate: moment(item.startDate).format("YYYY-MM-DD"),
+          endDate: moment(item.endDate).format("YYYY-MM-DD"),
           company: item.company,
           origin: item.originalDepartment.name,
           percentage: `${Math.round(currentPercentage)} %`,
@@ -88,8 +89,8 @@ export default function Projects() {
         if (currentPercentage == 100) {
           completedProjects.push({
             ...item,
-            startDate: moment(item.startDate).format('YYYY-MM-DD'),
-            endDate: moment(item.endDate).format('YYYY-MM-DD'),
+            startDate: moment(item.startDate).format("YYYY-MM-DD"),
+            endDate: moment(item.endDate).format("YYYY-MM-DD"),
             company: item.company,
             origin: item.originalDepartment.name,
           });
@@ -107,10 +108,10 @@ export default function Projects() {
 
   const items = [
     {
-      key: '1',
-      label: 'View',
+      key: "1",
+      label: "View",
       onClick: () => {
-        navigate('/view-project', {
+        navigate("/view-project", {
           state: {
             isEdit: false,
           },
@@ -118,10 +119,10 @@ export default function Projects() {
       },
     },
     {
-      key: '2',
-      label: 'Edit',
+      key: "2",
+      label: "Edit",
       onClick: () =>
-        navigate('/view-project', {
+        navigate("/view-project", {
           state: {
             isEdit: true,
           },
@@ -131,39 +132,39 @@ export default function Projects() {
 
   const columns = [
     {
-      title: 'Project Title',
-      dataIndex: 'title',
-      key: 'title',
+      title: "Project Title",
+      dataIndex: "title",
+      key: "title",
     },
     {
-      title: 'Company',
-      dataIndex: 'company',
-      key: 'company',
+      title: "Company",
+      dataIndex: "company",
+      key: "company",
     },
     {
-      title: 'Department',
-      dataIndex: 'origin',
-      key: 'origin',
+      title: "Department",
+      dataIndex: "origin",
+      key: "origin",
     },
     {
-      title: 'Start Date',
-      dataIndex: 'startDate',
-      key: 'startDate',
+      title: "Start Date",
+      dataIndex: "startDate",
+      key: "startDate",
     },
     {
-      title: 'End Date',
-      dataIndex: 'endDate',
-      key: 'endDate',
+      title: "End Date",
+      dataIndex: "endDate",
+      key: "endDate",
     },
     {
-      title: 'Progress',
-      dataIndex: 'percentage',
-      key: 'percentage',
+      title: "Progress",
+      dataIndex: "percentage",
+      key: "percentage",
     },
     {
-      title: 'Action',
-      key: 'action',
-      dataIndex: 'action',
+      title: "Action",
+      key: "action",
+      dataIndex: "action",
       render: (_, record) => (
         <Space
           onClick={() => {
@@ -171,14 +172,15 @@ export default function Projects() {
             setFolderName(record.title);
             dispatch(setCurrentProject(record));
           }}
-          size="middle">
+          size="middle"
+        >
           <Dropdown
             menu={{
               items: [
                 ...items,
-                (role == 'admin' || email == record?.createdBy) && {
-                  key: '3',
-                  label: 'Delete',
+                (role == "admin" || email == record?.createdBy) && {
+                  key: "3",
+                  label: "Delete",
                   danger: true,
                   icon: <DeleteOutlined />,
                   onClick: () => {
@@ -186,7 +188,8 @@ export default function Projects() {
                   },
                 },
               ],
-            }}>
+            }}
+          >
             <MoreOutlined />
           </Dropdown>
         </Space>
@@ -206,7 +209,8 @@ export default function Projects() {
         <ul
           role="list"
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 p-0"
-          style={{ width: '70%' }}>
+          style={{ width: "70%" }}
+        >
           <TileCard
             title="Total Projects"
             icon={Icon1}
@@ -234,30 +238,51 @@ export default function Projects() {
             minHeight: 560,
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
-          }}>
+          }}
+        >
           <Flex vertical gap="large">
             <Flex
               justify="space-between"
               align="center"
               gap="large"
-              className="pb-4">
+              className="pb-4"
+            >
               <div className="flex items-center">
-                <Search
-                  autoFocus={searchValue ? true : false}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setSearcherValue(value);
-                    handleSearch(value);
-                  }}
-                  placeholder="Search"
-                  style={{ width: 331 }}
-                />
+                <Space size="middle">
+                  <Search
+                    autoFocus={searchValue ? true : false}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setSearcherValue(value);
+                      handleSearch(value);
+                    }}
+                    placeholder="Search"
+                    style={{ width: 331 }}
+                  />
+                  <Space>
+                    <span>Department:</span>
+                    <Select className="w-[250px]" />
+                  </Space>
+                  <Space>
+                    <span>Status:</span>
+                    <Select
+                      className="w-[150px]"
+                      options={[
+                        { value: "all", label: "All" },
+                        { value: "ongoing", label: "Ongoing" },
+                        { value: "completed", label: "Completed" },
+                      ]}
+                    />
+                  </Space>
+                </Space>
               </div>
+
               <div>
                 <Button
                   type="primary"
                   className="text-[12px]"
-                  onClick={() => navigate('/new-project')}>
+                  onClick={() => navigate("/new-project")}
+                >
                   <Space>Add Project</Space>
                 </Button>
               </div>
