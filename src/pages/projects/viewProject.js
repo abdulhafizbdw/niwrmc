@@ -113,7 +113,13 @@ export default function ViewProject() {
       }
       values.uploads = [...values.uploads, ...newUpload];
       values.milestone = [...values.milestone, ...newMilestones];
-
+      const totalPercentage = [...formik.values.milestone].reduce(
+        (acc, curr) => acc + curr.percentage,
+        0
+      );
+      const currentPercentage =
+        (totalPercentage / formik.values.milestone.length / 100) * 100;
+      values.projectDone = currentPercentage == 100 ? true : false;
       const isCreated = await editProject({ folderId: _id, newFolder: values });
       if (isCreated.error) {
         notification.error({ message: isCreated.error.data.message });

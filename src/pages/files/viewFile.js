@@ -289,19 +289,7 @@ export default function ViewFile() {
                     {upload.title}
                   </span>
                 </Col>
-                <Col span={8}>
-                  <Upload
-                    disabled
-                    name="logo"
-                    listType="text"
-                    defaultFileList={[
-                      {
-                        name: upload.url,
-                        status: 'done',
-                      },
-                    ]}
-                  />
-                </Col>
+
                 <Col span={3}>
                   {' '}
                   <Button

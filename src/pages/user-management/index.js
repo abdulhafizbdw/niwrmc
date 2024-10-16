@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Input,
@@ -10,41 +10,49 @@ import {
   Select,
   theme,
   Skeleton,
-} from "antd";
-import { UserOutlined, MoreOutlined, DeleteOutlined } from "@ant-design/icons";
-import AddUserModal from "./modals/addUser";
-import EditUserModal from "./modals/editUser";
-import ChangePasswordModal from "./modals/changePassword";
-import DeleteUserModal from "./modals/deleteUser";
+} from 'antd';
+import { UserOutlined, MoreOutlined, DeleteOutlined } from '@ant-design/icons';
+import AddUserModal from './modals/addUser';
+import EditUserModal from './modals/editUser';
+import ChangePasswordModal from './modals/changePassword';
+import DeleteUserModal from './modals/deleteUser';
 
-import { useNavigate } from "react-router-dom";
-import { useGetUsersQuery } from "../../redux/api/services/AuthService";
-import { icons } from "antd/es/image/PreviewGroup";
-
+import { useNavigate } from 'react-router-dom';
+import { useGetUsersMutation } from '../../redux/api/services/AuthService';
+import { icons } from 'antd/es/image/PreviewGroup';
+import { useGetDepartmentsQuery } from '../../redux/api/services/DepartmentService';
+import debounce from 'lodash.debounce';
 export default function UserManagement() {
   const navigate = useNavigate();
   const [currenPage, setCurrentPage] = useState(1);
   const [allTotal, setAllTotal] = useState(0);
   const [currentUser, setCurrentUser] = useState(undefined);
+  const [departmentValue, setDepartmentValue] = useState('');
+
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState('');
+  const [users, setUsers] = useState([]);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const { Search } = Input;
-  const {
-    data: users,
-    error,
-    isLoading,
-    isFetching,
-    refetch,
-  } = useGetUsersQuery(currenPage);
+  const [getUsers, { isLoading }] = useGetUsersMutation();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openPassword, setOpenPassword] = useState(false);
   const [currentDepartment, setCurrentDepartment] = useState([]);
+
   const [openDelete, setOpenDelete] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+
   const [allUsers, setAllUsers] = useState([]);
-  const [searchValue, setSearcherValue] = useState("");
+  const [searchValue, setSearcherValue] = useState('');
+  const [refresh, setRefresh] = useState(0);
+  const refetch = () => {
+    setRefresh((prev) => prev + 1);
+  };
+  const handleSearch = debounce((value) => {
+    setDebouncedSearchValue(value);
+  }, 3000);
   const handleOk = () => {
     setConfirmLoading(true);
     setTimeout(() => {
@@ -56,27 +64,39 @@ export default function UserManagement() {
     }, 2000);
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpen(false);
     setOpenEdit(false);
     setOpenPassword(false);
     setOpenDelete(false);
   };
+  const [role, setRole] = useState('');
+  const [isActive, setIsActive] = useState('');
   const handleGetUsers = async () => {
-    if (users) {
-      const refactored = [];
+    const conditional = departmentValue
+      ? { departments: [departmentValue] }
+      : {};
+    const roleConditional = role ? { user: [role] } : {};
 
-      setAllTotal(users.pagination.total);
-      users.data.map((user, ind) => {
+    const all_users = await getUsers({
+      page: currenPage,
+      search: debouncedSearchValue,
+      ...conditional,
+      ...roleConditional,
+      isActive,
+    });
+    if (all_users.data) {
+      const refactored = [];
+      setUsers(all_users.data.data);
+      setAllTotal(all_users.data.pagination.total);
+      all_users.data.data.map((user, ind) => {
         refactored.push({
           name: `${user.firstName} ${user.lastName}`,
           email: user.email,
           status: user.isActive,
-          department: "",
-          role: user.role.map((role) => `${role} 👥 `),
+          role: user.role.map((role) => `${role} `),
           key: ind,
           department: user.departmentsData?.map(
-            (department) => `${department.name} 💼 `
+            (department) => `${department.name}  `
           ),
         });
       });
@@ -86,22 +106,22 @@ export default function UserManagement() {
 
   const items = [
     {
-      key: "1",
-      label: "Edit",
+      key: '1',
+      label: 'Edit',
       onClick: () => {
         setOpenEdit(true);
       },
     },
     {
-      key: "2",
-      label: "Change Password",
+      key: '2',
+      label: 'Change Password',
       onClick: () => {
         setOpenPassword(true);
       },
     },
     {
-      key: "3",
-      label: "Delete",
+      key: '3',
+      label: 'Delete',
       danger: true,
       icon: <DeleteOutlined />,
       onClick: () => {
@@ -111,59 +131,64 @@ export default function UserManagement() {
   ];
   useEffect(() => {
     handleGetUsers();
-  }, [users]);
+  }, [
+    departmentValue,
+    currenPage,
+    debouncedSearchValue,
+    role,
+    isActive,
+    refresh,
+  ]);
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "User Email",
-      dataIndex: "email",
-      key: "email",
+      title: 'User Email',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
-      title: "Role",
-      dataIndex: "role",
-      key: "role",
+      title: 'Role',
+      dataIndex: 'role',
+      key: 'role',
     },
     {
-      title: "Department",
-      dataIndex: "department",
-      key: "department",
+      title: 'Department',
+      dataIndex: 'department',
+      key: 'department',
     },
     {
-      title: "Status",
-      key: "status",
-      dataIndex: "status",
+      title: 'Status',
+      key: 'status',
+      dataIndex: 'status',
       render: (status) => (
         <span>
-          <Tag color={status === true ? "green" : "red"} key={status}>
-            {status ? "ACTIVE" : "INACTIVE"}
+          <Tag color={status === true ? 'green' : 'red'} key={status}>
+            {status ? 'ACTIVE' : 'INACTIVE'}
           </Tag>
         </span>
       ),
     },
     {
-      title: "Action",
-      key: "action",
-      dataIndex: "action",
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
       render: (ind, user, i) => (
         <Space
           onClick={() => {
-            setCurrentDepartment(users.data[i].department);
-            setCurrentUser(users.data[i]);
+            setCurrentDepartment(users[i].department);
+            setCurrentUser(users[i]);
           }}
-          size="middle"
-        >
+          size="middle">
           <Dropdown
             menu={{
               items,
-            }}
-          >
+            }}>
             <MoreOutlined />
           </Dropdown>
         </Space>
@@ -171,6 +196,19 @@ export default function UserManagement() {
     },
   ];
 
+  const { data } = useGetDepartmentsQuery();
+  const [departmentList, setDepartments] = useState([]);
+
+  useEffect(() => {
+    if (data) {
+      const newData = data.data.map((dp) => ({
+        label: dp.name,
+        value: dp._id,
+      }));
+
+      setDepartments(newData);
+    }
+  }, [data]);
   return (
     <div className="">
       <div
@@ -179,50 +217,72 @@ export default function UserManagement() {
           minHeight: 560,
           background: colorBgContainer,
           borderRadius: borderRadiusLG,
-        }}
-      >
+        }}>
         <Flex vertical gap="large">
-          {(isLoading || isFetching) && (
-            <Skeleton className="w-full" loading active />
-          )}
-          {!(isLoading || isFetching) && (
+          {isLoading && <Skeleton className="w-full" loading active />}
+          {!isLoading && (
             <>
               <Flex
                 justify="space-between"
                 align="center"
                 gap="large"
-                className="pb-4"
-              >
+                className="pb-4">
                 <div className="flex items-center">
                   <Space size="middle">
                     <Search
                       autoFocus={searchValue ? true : false}
                       placeholder="Search"
                       style={{ width: 331 }}
+                      value={searchValue}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setSearcherValue(value);
+                        handleSearch(value);
+                      }}
                     />
                     <Space>
                       <span>Department:</span>
-                      <Select className="w-[250px]" />
+                      <Select
+                        value={departmentValue}
+                        onChange={(e) => {
+                          setSearcherValue('');
+                          setDebouncedSearchValue('');
+                          setDepartmentValue(e);
+                        }}
+                        options={[
+                          { label: 'All', value: '' },
+                          ...departmentList,
+                        ]}
+                        className="w-[250px]"
+                      />
                     </Space>
                     <Space>
                       <span>Role:</span>
                       <Select
+                        value={role}
+                        onChange={(e) => {
+                          setRole(e);
+                        }}
                         className="w-[100px]"
                         options={[
-                          { value: "all", label: "All" },
-                          { value: "user", label: "User" },
-                          { value: "admin", label: "Admin" },
+                          { value: '', label: 'All' },
+                          { value: 'user', label: 'User' },
+                          { value: 'admin', label: 'Admin' },
                         ]}
                       />
                     </Space>
                     <Space>
                       <span>Status:</span>
                       <Select
+                        value={isActive}
+                        onChange={(e) => {
+                          setIsActive(e);
+                        }}
                         className="w-[100px]"
                         options={[
-                          { value: "all", label: "All" },
-                          { value: "active", label: "Active" },
-                          { value: "inactive", label: "Inactive" },
+                          { value: '', label: 'All' },
+                          { value: true, label: 'Active' },
+                          { value: false, label: 'Inactive' },
                         ]}
                       />
                     </Space>
@@ -232,8 +292,7 @@ export default function UserManagement() {
                   <Button
                     type="primary"
                     className="bg-PrimaryColor text-[12px]"
-                    onClick={() => setOpen(true)}
-                  >
+                    onClick={() => setOpen(true)}>
                     <Space>Create User</Space>
                   </Button>
                 </div>
@@ -260,7 +319,7 @@ export default function UserManagement() {
         </Flex>
       </div>
       <AddUserModal
-        refetch={refetch}
+        refetch={() => {}}
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
