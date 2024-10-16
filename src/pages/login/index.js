@@ -87,15 +87,15 @@ export default function Login() {
             <p className="mb-5">Sign into your account</p>
             <form>
               <div className="w-[100%]">
-                <span style={{ fontSize: '14px' }}>Username</span>
+                <span style={{ fontSize: '14px' }}>Email Address</span>
                 <Input
                   value={email}
                   onChange={handleChange}
                   name="email"
-                  label="Username"
+                  label="Email"
                   className="h-[38px] w-[100%] mb-2"
                   variant="outlined"
-                  placeholder="username"
+                  placeholder="Enter your email"
                   required
                   prefix={<UserOutlined />}
                 />

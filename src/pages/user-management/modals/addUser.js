@@ -24,7 +24,6 @@ const validationSchema = Yup.object({
   firstName: Yup.string().required('First Name is required'),
   lastName: Yup.string().required('Last Name is required'),
   otherName: Yup.string().optional(), // Optional field
-  user_id: Yup.string().required('User ID is required'),
   email: Yup.string()
     .email('Invalid email format')
     .required('Email is required'),
@@ -132,7 +131,7 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel, refetch }) => {
         )}>
         <Divider style={{ marginTop: '2px', marginBottom: '35px' }} />
         <Form layout="vertical">
-          <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
+          {/* <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
             <Col span={12}>
               <Form.Item
                 label="User ID"
@@ -153,7 +152,7 @@ const AddUserModal = ({ open, onOk, confirmLoading, onCancel, refetch }) => {
                 />
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
           <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
             <Col span={12}>
               <Form.Item

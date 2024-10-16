@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Input,
@@ -12,7 +12,7 @@ import {
   Row,
   Tag,
   Select,
-} from "antd";
+} from 'antd';
 import {
   MoreOutlined,
   FolderOpenOutlined,
@@ -20,25 +20,26 @@ import {
   SwapOutlined,
   HourglassOutlined,
   DeleteOutlined,
-} from "@ant-design/icons";
-import moment from "moment";
-import TileCard from "../../components/Cards/TileCard";
-import TransferModal from "./modals/transferModal";
-import Icon1 from "../../assets/foldericon.svg";
-import Icon2 from "../../assets/transfericon.svg";
-import Icon3 from "../../assets/awaitingicon.svg";
+} from '@ant-design/icons';
+import moment from 'moment';
+import TileCard from '../../components/Cards/TileCard';
+import TransferModal from './modals/transferModal';
+import Icon1 from '../../assets/foldericon.svg';
+import Icon2 from '../../assets/transfericon.svg';
+import Icon3 from '../../assets/awaitingicon.svg';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import {
   useGetFileByDepartmentsMutation,
   useGetPendingFilesMutation,
   useGetTransferedFilesMutation,
-} from "../../redux/api/services/FileService";
-import { useDispatch, useSelector } from "react-redux";
-import { setCurrentFile } from "../../redux/slices/currentFileSlice";
-import DeleteFileModal from "./modals/deleteFile";
-import debounce from "lodash.debounce";
-import { setLastFile } from "../../redux/slices/userSlice";
+} from '../../redux/api/services/FileService';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentFile } from '../../redux/slices/currentFileSlice';
+import DeleteFileModal from './modals/deleteFile';
+import debounce from 'lodash.debounce';
+import { setLastFile } from '../../redux/slices/userSlice';
+import { useGetDepartmentsQuery } from '../../redux/api/services/DepartmentService';
 
 export default function Files() {
   const navigate = useNavigate();
@@ -47,10 +48,10 @@ export default function Files() {
   const [totalPages, setTotalPages] = useState(0);
   const [allTotal, setAllTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchValue, setSearcherValue] = useState("");
-  const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
-  const [fileId, setFileId] = useState("");
-  const [fileName, setFileName] = useState("");
+  const [searchValue, setSearcherValue] = useState('');
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState('');
+  const [fileId, setFileId] = useState('');
+  const [fileName, setFileName] = useState('');
   const [allFiles, setAllFiles] = useState([]);
   const [pendingFiles, setAllPendingFiles] = useState([]);
   const [transferedFiles, setAllTransferedFiles] = useState([]);
@@ -85,7 +86,7 @@ export default function Files() {
     }, 2000);
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
+    console.log('Clicked cancel button');
     setOpen(false);
     setOpenDelete(false);
   };
@@ -96,28 +97,28 @@ export default function Files() {
 
   const items = [
     {
-      key: "1",
-      label: "View",
+      key: '1',
+      label: 'View',
       onClick: () =>
-        navigate("/view-file", {
+        navigate('/view-file', {
           state: {
             isEdit: false,
           },
         }),
     },
     {
-      key: "2",
-      label: "Edit",
+      key: '2',
+      label: 'Edit',
       onClick: () =>
-        navigate("/view-file", {
+        navigate('/view-file', {
           state: {
             isEdit: true,
           },
         }),
     },
     {
-      key: "3",
-      label: "Transfer",
+      key: '3',
+      label: 'Transfer',
       onClick: (e) => {
         setOpen(true);
       },
@@ -126,9 +127,9 @@ export default function Files() {
 
   const columns = [
     {
-      title: "Title",
-      dataIndex: "title",
-      key: "title",
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
       render: (_, record, i) => {
         const currentNewfiles = allTotal + transferedFiles.length - lastFile;
         return (
@@ -140,29 +141,29 @@ export default function Files() {
       },
     },
     {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
+      title: 'Type',
+      dataIndex: 'type',
+      key: 'type',
     },
     {
-      title: "No. of Items",
-      dataIndex: "items",
-      key: "items",
+      title: 'No. of Items',
+      dataIndex: 'items',
+      key: 'items',
     },
     {
-      title: "Date Created",
-      dataIndex: "date",
-      key: "date",
+      title: 'Date Created',
+      dataIndex: 'date',
+      key: 'date',
     },
     {
-      title: "Department",
-      dataIndex: "origin",
-      key: "origin",
+      title: 'Department',
+      dataIndex: 'origin',
+      key: 'origin',
     },
     {
-      title: "Action",
-      key: "action",
-      dataIndex: "action",
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
       render: (_, record) => (
         <Space
           onClick={() => {
@@ -170,15 +171,14 @@ export default function Files() {
             setFileName(record.title);
             dispatch(setCurrentFile(record));
           }}
-          size="middle"
-        >
+          size="middle">
           <Dropdown
             menu={{
               items: [
                 ...items,
-                (role == "admin" || email == record?.createdBy) && {
-                  key: "4",
-                  label: "Delete",
+                (role == 'admin' || email == record?.createdBy) && {
+                  key: '4',
+                  label: 'Delete',
                   danger: true,
                   icon: <DeleteOutlined />,
                   onClick: () => {
@@ -186,8 +186,7 @@ export default function Files() {
                   },
                 },
               ],
-            }}
-          >
+            }}>
             <MoreOutlined />
           </Dropdown>
         </Space>
@@ -197,39 +196,39 @@ export default function Files() {
 
   const transfercolumns = [
     {
-      title: "Title",
-      dataIndex: "title",
-      key: "title",
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
     },
     {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
+      title: 'Type',
+      dataIndex: 'type',
+      key: 'type',
     },
     {
-      title: "No. of Items",
-      dataIndex: "items",
-      key: "items",
+      title: 'No. of Items',
+      dataIndex: 'items',
+      key: 'items',
     },
     {
-      title: "Date Created",
-      dataIndex: "date",
-      key: "date",
+      title: 'Date Created',
+      dataIndex: 'date',
+      key: 'date',
     },
     {
-      title: "Department",
-      dataIndex: "origin",
-      key: "origin",
+      title: 'Department',
+      dataIndex: 'origin',
+      key: 'origin',
     },
     {
-      title: "Transferred to",
-      dataIndex: "transferdept",
-      key: "transferdept",
+      title: 'Transferred to',
+      dataIndex: 'transferdept',
+      key: 'transferdept',
     },
     {
-      title: "Action",
-      key: "action",
-      dataIndex: "action",
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
       render: (_, record) => (
         <Space
           onClick={() => {
@@ -237,24 +236,23 @@ export default function Files() {
             setFileName(record.title);
             dispatch(setCurrentFile(record));
           }}
-          size="middle"
-        >
+          size="middle">
           <Dropdown
             menu={{
               items,
-            }}
-          >
+            }}>
             <MoreOutlined />
           </Dropdown>
         </Space>
       ),
     },
   ];
+  const [departmentValue, setDepartmentValue] = useState('');
   const gtMyFiles = async () => {
     const allFiles = await getFiles({
       departments: department,
       page: currentPage,
-      search: debouncedSearchValue,
+      search: debouncedSearchValue ? debouncedSearchValue : departmentValue,
     });
 
     if (allFiles.data) {
@@ -264,7 +262,7 @@ export default function Files() {
         dispatch(
           setLastFile(allFiles.data.pagination.total + transferedFiles.length)
         );
-      }, 1000 * 60);
+      }, 30000);
       const editedData = [];
 
       allFiles.data.data.map((item) => {
@@ -272,7 +270,7 @@ export default function Files() {
           ...item,
           items: item.uploads.length,
           origin: item.originalDepartment.name,
-          date: moment(item.creation_date).format("YYYY-MM-DD"),
+          date: moment(item.creation_date).format('YYYY-MM-DD'),
         });
       });
 
@@ -288,11 +286,11 @@ export default function Files() {
           ...item,
           items: item.uploads.length,
           origin: item.originalDepartment.name,
-          date: moment(item.creation_date).format("YYYY-MM-DD"),
+          date: moment(item.creation_date).format('YYYY-MM-DD'),
         });
       });
+      setAllPendingFiles(pendingFiles);
     }
-    setAllPendingFiles(pendingFiles);
   };
   const handlegetTransferedFiles = async () => {
     const allFiles = await getTransferedFiles({ departments: department });
@@ -305,7 +303,7 @@ export default function Files() {
           items: item.uploads.length,
           origin: item.originalDepartment.name,
           transferdept: item.transferedTo.name,
-          date: moment(item.creation_date).format("YYYY-MM-DD"),
+          date: moment(item.creation_date).format('YYYY-MM-DD'),
         });
       });
 
@@ -327,7 +325,20 @@ export default function Files() {
     if (department) {
       gtMyFiles();
     }
-  }, [refresh, currentPage, debouncedSearchValue]);
+  }, [refresh, currentPage, debouncedSearchValue, departmentValue]);
+  const { data } = useGetDepartmentsQuery();
+  const [departmentList, setDepartments] = useState([]);
+
+  useEffect(() => {
+    if (data) {
+      const newData = data.data.map((dp) => ({
+        label: dp.name,
+        value: dp._id,
+      }));
+      const result = newData.filter((item) => department.includes(item.value));
+      setDepartments(result);
+    }
+  }, [data]);
 
   const files = (
     <div
@@ -336,15 +347,13 @@ export default function Files() {
         minHeight: 560,
         background: colorBgContainer,
         borderRadius: borderRadiusLG,
-      }}
-    >
+      }}>
       <Flex vertical gap="large">
         <Flex
           justify="space-between"
           align="center"
           gap="large"
-          className="pb-4"
-        >
+          className="pb-4">
           <div className="flex items-center">
             <Space size="middle">
               <Search
@@ -360,7 +369,16 @@ export default function Files() {
               />
               <Space>
                 <span>Department:</span>
-                <Select className="w-[250px]" />
+                <Select
+                  value={departmentValue}
+                  onChange={(e) => {
+                    setSearcherValue('');
+                    setDebouncedSearchValue('');
+                    setDepartmentValue(e);
+                  }}
+                  options={[{ label: 'All', value: '' }, ...departmentList]}
+                  className="w-[250px]"
+                />
               </Space>
             </Space>
           </div>
@@ -368,8 +386,7 @@ export default function Files() {
             <Button
               type="primary"
               className="text-[12px]"
-              onClick={() => navigate("/new-file")}
-            >
+              onClick={() => navigate('/new-file')}>
               <Space>Create File</Space>
             </Button>
           </div>
@@ -402,17 +419,15 @@ export default function Files() {
         minHeight: 560,
         background: colorBgContainer,
         borderRadius: borderRadiusLG,
-      }}
-    >
+      }}>
       <Flex vertical gap="large">
         <Flex
           justify="space-between"
           align="center"
           gap="large"
-          className="pb-4"
-        >
+          className="pb-4">
           <div className="flex items-center">
-            <Search placeholder="Search" style={{ width: 331 }} />
+            {/* <Search placeholder="Search" style={{ width: 331 }} /> */}
           </div>
         </Flex>
 
@@ -435,24 +450,21 @@ export default function Files() {
         minHeight: 560,
         background: colorBgContainer,
         borderRadius: borderRadiusLG,
-      }}
-    >
+      }}>
       <Flex vertical gap="large">
         <Flex
           justify="space-between"
           align="center"
           gap="large"
-          className="pb-4"
-        >
+          className="pb-4">
           <div className="flex items-center">
-            <Search placeholder="Search" style={{ width: 331 }} />
+            {/* <Search placeholder="Search" style={{ width: 331 }} /> */}
           </div>
           <div>
             <Button
               type="primary"
               className="text-[12px]"
-              onClick={() => navigate("/new-file")}
-            >
+              onClick={() => navigate('/new-file')}>
               <Space>Create File</Space>
             </Button>
           </div>
@@ -471,20 +483,20 @@ export default function Files() {
   );
   const tabItems = [
     {
-      key: "1",
-      label: "Files",
+      key: '1',
+      label: 'Files',
       icon: <FolderOpenOutlined />,
       children: files,
     },
     {
-      key: "2",
-      label: "Transferred",
+      key: '2',
+      label: 'Transferred',
       icon: <SwapOutlined />,
       children: transferred,
     },
     {
-      key: "3",
-      label: "Pending Review",
+      key: '3',
+      label: 'Pending Review',
       icon: <HourglassOutlined />,
       children: pendingfilesView,
     },
@@ -495,8 +507,7 @@ export default function Files() {
       <ul
         role="list"
         className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 p-0"
-        style={{ width: "70%" }}
-      >
+        style={{ width: '70%' }}>
         {!isLoading && (
           <>
             <TileCard

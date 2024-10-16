@@ -16,9 +16,11 @@ const injectedUserApi = api.injectEndpoints({
         body: req,
       }),
     }),
-    getUsers: builder.query({
-      query: (currentPage) => ({
-        url: `/all_users?page=${currentPage}`,
+    getUsers: builder.mutation({
+      query: (req) => ({
+        url: `/all_users`,
+        method: 'POST',
+        body: req,
       }),
     }),
 
@@ -43,14 +45,22 @@ const injectedUserApi = api.injectEndpoints({
         body: req,
       }),
     }),
+    getProfile: builder.mutation({
+      query: (req) => ({
+        url: `/user/profile`,
+        method: 'POST',
+        body: req,
+      }),
+    }),
   }),
 });
 
 export const {
   useCreateAccountMutation,
   useLoginAccountMutation,
-  useGetUsersQuery,
   useEditUserMutation,
   useDeleteUserMutation,
   useChangePasswordMutation,
+  useGetProfileMutation,
+  useGetUsersMutation,
 } = injectedUserApi;

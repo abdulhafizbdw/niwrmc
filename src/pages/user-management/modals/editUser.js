@@ -82,7 +82,7 @@ const EditUserModal = ({
         if (edited.error) {
           notification.error({ message: edited.error.data.message });
         } else {
-          notification.success({ message: 'Created Successfully' });
+          notification.success({ message: 'Edited Successfully' });
           formik.resetForm();
           onCancel();
           refetch();
@@ -244,8 +244,12 @@ const EditUserModal = ({
         <span className="text-[14px]">
           <Switch
             onChange={(e) => {
-              formik.values.isActive = e;
+              formik.setValues({
+                ...formik.values,
+                isActive: e,
+              });
             }}
+            value={formik.values.isActive}
             checkedChildren={<CheckOutlined />}
             unCheckedChildren={<CloseOutlined />}
             defaultChecked={formik.values.isActive}
