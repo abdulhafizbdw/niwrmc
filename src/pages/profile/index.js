@@ -17,7 +17,7 @@ import ChangePasswordModal from './modals/changePassword';
 import { useNavigate } from 'react-router-dom';
 import {
   useGetProfileMutation,
-  useGetUsersQuery,
+  
 } from '../../redux/api/services/AuthService';
 import { icons } from 'antd/es/image/PreviewGroup';
 import { useSelector } from 'react-redux';
