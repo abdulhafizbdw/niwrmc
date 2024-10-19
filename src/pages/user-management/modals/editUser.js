@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
+import React, { useEffect, useState } from "react";
+import * as Yup from "yup";
+import { useFormik } from "formik";
 import {
   Button,
   Modal,
@@ -12,14 +12,14 @@ import {
   Switch,
   notification,
   Form,
-} from 'antd';
+} from "antd";
 import {
   CheckCircleOutlined,
   CheckOutlined,
   CloseOutlined,
-} from '@ant-design/icons';
-import { useGetDepartmentsQuery } from '../../../redux/api/services/DepartmentService';
-import { useEditUserMutation } from '../../../redux/api/services/AuthService';
+} from "@ant-design/icons";
+import { useGetDepartmentsQuery } from "../../../redux/api/services/DepartmentService";
+import { useEditUserMutation } from "../../../redux/api/services/AuthService";
 
 const EditUserModal = ({
   open,
@@ -36,18 +36,18 @@ const EditUserModal = ({
   const [editUser, { isLoading }] = useEditUserMutation();
 
   const validationSchema = Yup.object({
-    firstName: Yup.string().required('First Name is required'),
-    lastName: Yup.string().required('Last Name is required'),
+    firstName: Yup.string().required("First Name is required"),
+    lastName: Yup.string().required("Last Name is required"),
     otherName: Yup.string().optional(), // Optional field
-    user_id: Yup.string().required('User ID is required'),
+    user_id: Yup.string().required("User ID is required"),
     email: Yup.string()
-      .email('Invalid email format')
-      .required('Email is required'),
+      .email("Invalid email format")
+      .required("Email is required"),
 
     department: Yup.array()
       .of(Yup.string())
-      .min(1, 'At least one role is required'),
-    role: Yup.array().of(Yup.string()).min(1, 'At least one role is required'),
+      .min(1, "At least one role is required"),
+    role: Yup.array().of(Yup.string()).min(1, "At least one role is required"),
   });
 
   const initialValues = {
@@ -82,14 +82,14 @@ const EditUserModal = ({
         if (edited.error) {
           notification.error({ message: edited.error.data.message });
         } else {
-          notification.success({ message: 'Edited Successfully' });
+          notification.success({ message: "Edited Successfully" });
           formik.resetForm();
           onCancel();
           refetch();
           // navigate('/files');
         }
       } catch (error) {
-        notification.error('Something went wrong');
+        notification.error("Something went wrong");
       }
     },
   });
@@ -144,16 +144,18 @@ const EditUserModal = ({
               loading={isLoading}
               onClick={() => handleSubmit()}
               type="primary"
-              className="bg-PrimaryColor">
+              className="bg-PrimaryColor"
+            >
               <CheckCircleOutlined />
               Save
             </Button>
           </>
-        )}>
-        <Divider style={{ marginTop: '2px', marginBottom: '35px' }} />
+        )}
+      >
+        <Divider style={{ marginTop: "2px", marginBottom: "35px" }} />
 
         <Form layout="vertical">
-          <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
+          {/* <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
             <Col span={12}>
               <Input
                 value={formik.values.user_id}
@@ -164,7 +166,7 @@ const EditUserModal = ({
                 placeholder="ID"
               />
             </Col>
-          </Row>
+          </Row> */}
           <Row gutter={{ xs: 8, sm: 16, md: 18 }}>
             <Col span={12}>
               <Input
@@ -233,8 +235,8 @@ const EditUserModal = ({
                   });
                 }}
                 options={[
-                  { value: 'user', label: 'User' },
-                  { value: 'admin', label: 'Admin' },
+                  { value: "user", label: "User" },
+                  { value: "admin", label: "Admin" },
                   // { value: 'super_admin', label: 'Super Administrator' },
                 ]}
               />
@@ -253,11 +255,11 @@ const EditUserModal = ({
             checkedChildren={<CheckOutlined />}
             unCheckedChildren={<CloseOutlined />}
             defaultChecked={formik.values.isActive}
-          />{' '}
+          />{" "}
           Make active
         </span>
-        <Row style={{ margin: '30px 0' }}>
-          <Col />{' '}
+        <Row style={{ margin: "30px 0" }}>
+          <Col />{" "}
         </Row>
       </Modal>
     </>
