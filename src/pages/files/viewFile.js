@@ -329,7 +329,7 @@ export default function ViewFile() {
                     extra="upload your document here">
                     <Upload
                       beforeUpload={(file) => {
-                        const uploadPreset = 'v4lnyqau'; // Replace with your Cloudinary upload preset name
+                        const uploadPreset = 'tdqtpbjq'; // Replace with your Cloudinary upload preset name
                         setUploading(true); // Set uploading state to true
 
                         const formData = new FormData();
@@ -338,7 +338,7 @@ export default function ViewFile() {
 
                         // Upload the file
                         return fetch(
-                          'https://api.cloudinary.com/v1_1/djlbovjlt/image/upload',
+                          'https://api.cloudinary.com/v1_1/dhnpl2km6/image/upload',
                           {
                             method: 'POST',
                             body: formData,
