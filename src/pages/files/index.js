@@ -140,7 +140,7 @@ export default function Files() {
 
   const columns = [
     {
-      title: "Title",
+      title: "File Title",
       dataIndex: "title",
       key: "title",
       render: (_, record, i) => {
@@ -154,7 +154,7 @@ export default function Files() {
       },
     },
     {
-      title: "Type",
+      title: "File Subject",
       dataIndex: "type",
       key: "type",
     },

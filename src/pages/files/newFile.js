@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
+import React, { useEffect, useState } from "react";
+import * as Yup from "yup";
+import { useFormik } from "formik";
 import {
   Button,
   Input,
@@ -16,15 +16,15 @@ import {
   message,
   Spin,
   notification,
-} from 'antd';
-import { UserOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+} from "antd";
+import { UserOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 
-import { useNavigate } from 'react-router-dom';
-import { useGetDepartmentsQuery } from '../../redux/api/services/DepartmentService';
-import { useSelector } from 'react-redux';
-import { useCreateFileMutation } from '../../redux/api/services/FileService';
+import { useNavigate } from "react-router-dom";
+import { useGetDepartmentsQuery } from "../../redux/api/services/DepartmentService";
+import { useSelector } from "react-redux";
+import { useCreateFileMutation } from "../../redux/api/services/FileService";
 export const fileValidationSchema = Yup.object({
-  title: Yup.string().required('Title is required'),
+  title: Yup.string().required("Title is required"),
   type: Yup.string(),
   comments: Yup.string(),
   uploads: Yup.array().of(
@@ -33,15 +33,15 @@ export const fileValidationSchema = Yup.object({
       url: Yup.string(),
     })
   ),
-  department: Yup.string().required('Department is required'),
+  department: Yup.string().required("Department is required"),
 });
 
 export const initialValues = {
-  title: '',
-  type: '',
-  comments: '',
+  title: "",
+  type: "",
+  comments: "",
   uploads: [],
-  department: '',
+  department: "",
   originalDepartment: {},
 };
 export default function NewFile() {
@@ -51,7 +51,7 @@ export default function NewFile() {
   const myDepartments = useSelector((data) => data.user.department);
   const [createFile, { isLoading: creating }] = useCreateFileMutation();
   const { data } = useGetDepartmentsQuery();
-  const [uploads, setUploads] = useState([{ title: '', url: '' }]);
+  const [uploads, setUploads] = useState([{ title: "", url: "" }]);
   const [uploading, setUploading] = useState(false);
   const handleInputChange = (index, event) => {
     const { value } = event.target;
@@ -88,11 +88,11 @@ export default function NewFile() {
         if (isCreated.error) {
           notification.error({ message: isCreated.error.data.message });
         } else {
-          notification.success({ message: 'Created File Successfully' });
-          navigate('/files');
+          notification.success({ message: "Created File Successfully" });
+          navigate("/files");
         }
       } catch (error) {
-        notification.error('Something went wrong');
+        notification.error("Something went wrong");
       }
     },
   });
@@ -106,9 +106,9 @@ export default function NewFile() {
   };
 
   const props = {
-    name: 'file',
+    name: "file",
     multiple: false,
-    action: 'https://api.cloudinary.com/v1_1/dhnpl2km6/image/upload',
+    action: "https://api.cloudinary.com/v1_1/dhnpl2km6/image/upload",
   };
 
   const { title, comments, type } = formik.values;
@@ -132,11 +132,12 @@ export default function NewFile() {
         style={{
           padding: 24,
           minHeight: 560,
-          width: '70%',
-          margin: '0 auto',
+          width: "70%",
+          margin: "0 auto",
           background: colorBgContainer,
           borderRadius: borderRadiusLG,
-        }}>
+        }}
+      >
         <Flex vertical gap="large">
           <div className="border-bottom">
             <Flex justify="space-between" align="center">
@@ -146,7 +147,7 @@ export default function NewFile() {
           <div>
             <Row align="middle" gutter={{ xs: 8, sm: 16, md: 34 }}>
               <Col span={12}>
-                <span style={{ fontSize: '14px' }}>Title</span>
+                <span style={{ fontSize: "14px" }}>File Title</span>
                 <Input
                   value={title}
                   onChange={handleChange}
@@ -157,8 +158,8 @@ export default function NewFile() {
                 />
               </Col>
               <Col span={12}>
-                {' '}
-                <span style={{ fontSize: '14px' }}>Department</span>
+                {" "}
+                <span style={{ fontSize: "14px" }}>Department</span>
                 <Select
                   onChange={(e) => {
                     formik.values.department = e;
@@ -170,7 +171,7 @@ export default function NewFile() {
             </Row>
             <Row align="middle" gutter={{ xs: 8, sm: 16, md: 34 }}>
               <Col span={12}>
-                <span style={{ fontSize: '14px' }}>Comment</span>
+                <span style={{ fontSize: "14px" }}>Comment</span>
                 <TextArea
                   onChange={handleChange}
                   title={comments}
@@ -182,25 +183,25 @@ export default function NewFile() {
                 />
               </Col>
               <Col span={12}>
-                <span style={{ fontSize: '14px' }}>Type</span>
+                <span style={{ fontSize: "14px" }}>File Subject</span>
                 <Input
                   value={type}
                   onChange={handleChange}
                   name="type"
                   className="h-[38px] w-[100%] mb-3"
                   variant="outlined"
-                  placeholder="Enter title"
+                  placeholder="Enter file subject"
                 />
               </Col>
             </Row>
 
-            <Divider style={{ marginTop: '20px', marginBottom: '35px' }} />
+            <Divider style={{ marginTop: "20px", marginBottom: "35px" }} />
 
             <Typography.Title level={5}>Upload Document</Typography.Title>
             {uploads.map((upload, ind) => (
               <Row key={ind} align="middle" gutter={{ xs: 8, sm: 16, md: 34 }}>
                 <Col span={12}>
-                  <span style={{ fontSize: '14px' }}>Title</span>
+                  <span style={{ fontSize: "14px" }}>Title</span>
                   <Input
                     value={upload.title}
                     onChange={(e) => handleInputChange(ind, e)}
@@ -215,28 +216,29 @@ export default function NewFile() {
                     name="upload"
                     valuePropName="fileList"
                     getValueFromEvent={normFile}
-                    extra="upload your document here">
+                    extra="upload your document here"
+                  >
                     <Upload
                       beforeUpload={(file) => {
-                        const uploadPreset = 'tdqtpbjq'; // Replace with your Cloudinary upload preset name
+                        const uploadPreset = "tdqtpbjq"; // Replace with your Cloudinary upload preset name
                         setUploading(true); // Set uploading state to true
 
                         const formData = new FormData();
-                        formData.append('file', file);
-                        formData.append('upload_preset', uploadPreset);
+                        formData.append("file", file);
+                        formData.append("upload_preset", uploadPreset);
 
                         // Upload the file
                         return fetch(
-                          'https://api.cloudinary.com/v1_1/dhnpl2km6/image/upload',
+                          "https://api.cloudinary.com/v1_1/dhnpl2km6/image/upload",
                           {
-                            method: 'POST',
+                            method: "POST",
                             body: formData,
                           }
                         )
                           .then((response) => response.json())
                           .then((data) => {
                             // Handle the upload response
-                            console.log('Upload response:', data);
+                            console.log("Upload response:", data);
                             if (data.error) {
                               message.error(
                                 `${file.name} upload failed: ${data.error.message}`
@@ -251,7 +253,7 @@ export default function NewFile() {
                             }
                           })
                           .catch((error) => {
-                            console.error('Upload error:', error);
+                            console.error("Upload error:", error);
                             message.error(`${file.name} upload failed.`);
                           })
                           .finally(() => {
@@ -264,7 +266,8 @@ export default function NewFile() {
                       }}
                       {...props}
                       name="logo"
-                      listType="picture">
+                      listType="picture"
+                    >
                       {uploading && <Spin size="large" spinning />}
                       {!uploading && (
                         <Button icon={<UploadOutlined />}>
@@ -277,15 +280,15 @@ export default function NewFile() {
               </Row>
             ))}
 
-            <Divider style={{ marginTop: '20px', marginBottom: '35px' }} />
+            <Divider style={{ marginTop: "20px", marginBottom: "35px" }} />
 
             <Row>
               <Col span={12} offset={6} align="middle">
                 <Button
                   onClick={() => {
                     const new_value = {
-                      title: '',
-                      url: '',
+                      title: "",
+                      url: "",
                     };
                     setUploads((prev) => [...prev, new_value]);
                   }}
@@ -293,7 +296,8 @@ export default function NewFile() {
                   ghost
                   icon={<PlusOutlined />}
                   size="middle"
-                  className="bg-PrimaryColor">
+                  className="bg-PrimaryColor"
+                >
                   Add Document
                 </Button>
               </Col>
@@ -306,7 +310,8 @@ export default function NewFile() {
                 type="link"
                 block
                 className="text-PrimaryColor"
-                onClick={() => navigate('/files')}>
+                onClick={() => navigate("/files")}
+              >
                 Back to Files
               </Button>
             </div>
@@ -315,7 +320,7 @@ export default function NewFile() {
                 loading={creating}
                 onClick={() => {
                   const filteredUpload = uploads.filter(
-                    (upload) => upload.title !== ''
+                    (upload) => upload.title !== ""
                   );
                   formik.values.uploads = filteredUpload;
 
@@ -324,7 +329,8 @@ export default function NewFile() {
                 type="primary"
                 size="middle"
                 block
-                className="bg-PrimaryColor">
+                className="bg-PrimaryColor"
+              >
                 Create File
               </Button>
             </div>
